@@ -1,4 +1,4 @@
-package dev.ernandorezende.my_books;
+package dev.ernandorezende.mybooks;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

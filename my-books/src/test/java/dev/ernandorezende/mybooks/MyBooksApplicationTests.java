@@ -1,4 +1,4 @@
-package dev.ernandorezende.my_books;
+package dev.ernandorezende.mybooks;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
