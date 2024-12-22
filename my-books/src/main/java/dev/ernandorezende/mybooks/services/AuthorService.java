@@ -19,22 +19,18 @@ public class AuthorService {
     }
 
     public Author getById(Long id) {
-        return authorRepository.findById(id).orElse(null);
+        return authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
     }
 
     public Author save(Author author) {
         return authorRepository.save(author);
     }
 
-    public Author update(Author authorReq, Long id) {
+    public void update(Author authorReq, Long id) {
         var author = getById(id);
-        if (author == null) {
-            return null;
-        }
+
         author.setName(authorReq.getName());
-//        author.setEmail(authorReq.getEmail());
-//        author.setPhone(authorReq.getPhone());
-        return authorRepository.save(author);
+        authorRepository.save(author);
     }
 
     public void delete(Long id) {

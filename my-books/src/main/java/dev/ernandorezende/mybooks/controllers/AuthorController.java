@@ -2,6 +2,8 @@ package dev.ernandorezende.mybooks.controllers;
 
 import dev.ernandorezende.mybooks.entities.Author;
 import dev.ernandorezende.mybooks.services.AuthorService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,27 +18,29 @@ public class AuthorController {
     }
 
     @GetMapping
-    public List<Author> getAllAuthors() {
-        return authorService.getAll();
+    public ResponseEntity<List<Author>> getAllAuthors() {
+        return ResponseEntity.ok(authorService.getAll());
     }
 
     @GetMapping("/{id}")
-    public Author getAuthorById(@PathVariable Long id) {
-        return authorService.getById(id);
+    public ResponseEntity<Author> getAuthorById(@PathVariable Long id) {
+        return ResponseEntity.ok(authorService.getById(id));
     }
 
     @PostMapping
-    public Author saveAuthor(@RequestBody Author author) {
-        return authorService.save(author);
+    public ResponseEntity<Author> saveAuthor(@RequestBody Author author) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authorService.save(author));
     }
 
     @PutMapping("/{id}")
-    public Author updateAuthor(@PathVariable Long id, @RequestBody Author author) {
-        return authorService.update(author, id);
+    public ResponseEntity<Void> updateAuthor(@PathVariable Long id, @RequestBody Author author) {
+        authorService.update(author, id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAuthor(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteAuthor(@PathVariable Long id) {
         authorService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
