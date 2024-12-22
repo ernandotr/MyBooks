@@ -1,8 +1,6 @@
 package dev.ernandorezende.mybooks.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
@@ -10,10 +8,9 @@ import java.util.Objects;
 @Table(name = "author")
 public class Author {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private String email;
-    private String phone;
 
     public Long getId() {
         return id;
@@ -31,36 +28,19 @@ public class Author {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     @Override
     public String toString() {
-        return "Author{" + "id=" + id + ", name=" + name + ", email=" + email + ", phone=" + phone + '}';
+        return "Author{" + "id=" + id + ", name=" + name + '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Author author)) return false;
-        return Objects.equals(id, author.id) && Objects.equals(name, author.name)
-                && Objects.equals(email, author.email) && Objects.equals(phone, author.phone);
+        return Objects.equals(id, author.id) && Objects.equals(name, author.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, phone);
+        return Objects.hash(id, name);
     }
 }

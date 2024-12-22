@@ -26,7 +26,7 @@ public class AuthorController {
     }
 
     @PostMapping
-    public Author saveAuthor(Author author) {
+    public Author saveAuthor(@RequestBody Author author) {
         return authorService.save(author);
     }
 

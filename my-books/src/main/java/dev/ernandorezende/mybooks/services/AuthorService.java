@@ -32,8 +32,8 @@ public class AuthorService {
             return null;
         }
         author.setName(authorReq.getName());
-        author.setEmail(authorReq.getEmail());
-        author.setPhone(authorReq.getPhone());
+//        author.setEmail(authorReq.getEmail());
+//        author.setPhone(authorReq.getPhone());
         return authorRepository.save(author);
     }
 
