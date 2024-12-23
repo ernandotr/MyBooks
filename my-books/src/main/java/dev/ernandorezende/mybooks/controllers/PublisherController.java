@@ -2,6 +2,8 @@ package dev.ernandorezende.mybooks.controllers;
 
 import dev.ernandorezende.mybooks.entities.Publisher;
 import dev.ernandorezende.mybooks.services.PublisherService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,27 +19,29 @@ public class PublisherController {
     }
 
     @GetMapping
-    public List<Publisher> getAllPublishers() {
-        return this.publisherService.getAll();
+    public ResponseEntity<List<Publisher>> getAllPublishers() {
+        return ResponseEntity.ok(this.publisherService.getAll());
     }
 
     @GetMapping("/{id}")
-    public Publisher getPublisherById(@PathVariable Long id) {
-        return this.publisherService.getById(id);
+    public ResponseEntity<Publisher> getPublisherById(@PathVariable Long id) {
+        return ResponseEntity.ok(this.publisherService.getById(id));
     }
 
     @PostMapping
-    public Publisher savePublisher(Publisher publisher) {
-        return this.publisherService.create(publisher);
+    public ResponseEntity<Publisher> savePublisher(@RequestBody Publisher publisher) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.publisherService.create(publisher));
     }
 
     @PutMapping("/{id}")
-    public Publisher updatePublisher(@PathVariable Long id, @RequestBody Publisher publisher) {
-        return this.publisherService.update(publisher, id);
+    public ResponseEntity<Void> updatePublisher(@PathVariable Long id, @RequestBody Publisher publisher) {
+        this.publisherService.update(publisher, id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
-    public void deletePublisher(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePublisher(@PathVariable Long id) {
         this.publisherService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
