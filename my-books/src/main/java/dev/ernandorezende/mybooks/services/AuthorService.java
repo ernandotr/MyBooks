@@ -1,6 +1,7 @@
 package dev.ernandorezende.mybooks.services;
 
 import dev.ernandorezende.mybooks.entities.Author;
+import dev.ernandorezende.mybooks.exceptions.AuthorNotFoundException;
 import dev.ernandorezende.mybooks.repositories.AuthorRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class AuthorService {
     }
 
     public Author getById(Long id) {
-        return authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
+        return authorRepository.findById(id).orElseThrow(AuthorNotFoundException::new);
     }
 
     public Author save(Author author) {
