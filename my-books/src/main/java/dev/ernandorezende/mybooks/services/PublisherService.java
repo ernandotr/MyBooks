@@ -1,5 +1,6 @@
 package dev.ernandorezende.mybooks.services;
 
+import dev.ernandorezende.mybooks.dtos.requests.PublisherRequest;
 import dev.ernandorezende.mybooks.entities.Publisher;
 import dev.ernandorezende.mybooks.exceptions.PublisherNotFoundException;
 import dev.ernandorezende.mybooks.repositories.PublisherRepository;
@@ -17,7 +18,9 @@ public class PublisherService {
         this.publisherRepository = publisherRepository;
     }
 
-    public Publisher create(@RequestBody  Publisher publisher) {
+    public Publisher create(PublisherRequest publisherReq) {
+        var publisher = new Publisher();
+        publisher.setName(publisherReq.name());
         return publisherRepository.save(publisher);
     }
 
@@ -25,10 +28,10 @@ public class PublisherService {
         return publisherRepository.findById(id).orElseThrow(PublisherNotFoundException::new);
     }
 
-    public Publisher update(Publisher publisherReq, Long id) {
+    public Publisher update(PublisherRequest publisherReq, Long id) {
         var publisher = getById(id);
 
-        publisher.setName(publisherReq.getName());
+        publisher.setName(publisherReq.name());
         return publisherRepository.save(publisher);
     }
 
