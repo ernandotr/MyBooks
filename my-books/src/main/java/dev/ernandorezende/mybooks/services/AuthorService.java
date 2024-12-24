@@ -1,5 +1,6 @@
 package dev.ernandorezende.mybooks.services;
 
+import dev.ernandorezende.mybooks.dtos.requests.AuthorRequest;
 import dev.ernandorezende.mybooks.entities.Author;
 import dev.ernandorezende.mybooks.exceptions.AuthorNotFoundException;
 import dev.ernandorezende.mybooks.repositories.AuthorRepository;
@@ -23,14 +24,16 @@ public class AuthorService {
         return authorRepository.findById(id).orElseThrow(AuthorNotFoundException::new);
     }
 
-    public Author save(Author author) {
+    public Author save(AuthorRequest authorRequest) {
+        var author = new Author();
+        author.setName(authorRequest.name());
         return authorRepository.save(author);
     }
 
-    public void update(Author authorReq, Long id) {
+    public void update(AuthorRequest authorReq, Long id) {
         var author = getById(id);
 
-        author.setName(authorReq.getName());
+        author.setName(authorReq.name());
         authorRepository.save(author);
     }
 

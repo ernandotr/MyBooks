@@ -1,5 +1,6 @@
 package dev.ernandorezende.mybooks.controllers;
 
+import dev.ernandorezende.mybooks.dtos.requests.AuthorRequest;
 import dev.ernandorezende.mybooks.entities.Author;
 import dev.ernandorezende.mybooks.services.AuthorService;
 import org.springframework.http.HttpStatus;
@@ -28,12 +29,12 @@ public class AuthorController {
     }
 
     @PostMapping
-    public ResponseEntity<Author> saveAuthor(@RequestBody Author author) {
+    public ResponseEntity<Author> saveAuthor(@RequestBody AuthorRequest author) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authorService.save(author));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateAuthor(@PathVariable Long id, @RequestBody Author author) {
+    public ResponseEntity<Void> updateAuthor(@PathVariable Long id, @RequestBody AuthorRequest author) {
         authorService.update(author, id);
         return ResponseEntity.noContent().build();
     }
