@@ -5,7 +5,6 @@ import dev.ernandorezende.mybooks.entities.Publisher;
 import dev.ernandorezende.mybooks.exceptions.PublisherNotFoundException;
 import dev.ernandorezende.mybooks.repositories.PublisherRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -28,11 +27,11 @@ public class PublisherService {
         return publisherRepository.findById(id).orElseThrow(PublisherNotFoundException::new);
     }
 
-    public Publisher update(PublisherRequest publisherReq, Long id) {
+    public void update(PublisherRequest publisherReq, Long id) {
         var publisher = getById(id);
 
         publisher.setName(publisherReq.name());
-        return publisherRepository.save(publisher);
+        publisherRepository.save(publisher);
     }
 
     public List<Publisher> getAll() {
