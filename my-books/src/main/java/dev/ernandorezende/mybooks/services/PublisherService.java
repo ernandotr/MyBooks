@@ -4,6 +4,7 @@ import dev.ernandorezende.mybooks.dtos.requests.PublisherRequest;
 import dev.ernandorezende.mybooks.entities.Publisher;
 import dev.ernandorezende.mybooks.exceptions.PublisherNotFoundException;
 import dev.ernandorezende.mybooks.repositories.PublisherRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @Service
 public class PublisherService {
 
+    private final ModelMapper modelMapper = new ModelMapper();
     private final PublisherRepository publisherRepository;
 
     public PublisherService(PublisherRepository publisherRepository) {
@@ -18,8 +20,7 @@ public class PublisherService {
     }
 
     public Publisher create(PublisherRequest publisherReq) {
-        var publisher = new Publisher();
-        publisher.setName(publisherReq.name());
+        Publisher publisher = modelMapper.map(publisherReq, Publisher.class);
         return publisherRepository.save(publisher);
     }
 
@@ -30,7 +31,7 @@ public class PublisherService {
     public void update(PublisherRequest publisherReq, Long id) {
         var publisher = getById(id);
 
-        publisher.setName(publisherReq.name());
+        publisher.setName(publisherReq.getName());
         publisherRepository.save(publisher);
     }
 
