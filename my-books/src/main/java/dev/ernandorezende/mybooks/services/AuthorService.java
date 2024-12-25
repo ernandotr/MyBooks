@@ -4,6 +4,7 @@ import dev.ernandorezende.mybooks.dtos.requests.AuthorRequest;
 import dev.ernandorezende.mybooks.entities.Author;
 import dev.ernandorezende.mybooks.exceptions.AuthorNotFoundException;
 import dev.ernandorezende.mybooks.repositories.AuthorRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.List;
 @Service
 public class AuthorService {
     private final AuthorRepository authorRepository;
+    private final ModelMapper modelMapper = new ModelMapper();
+
 
     public AuthorService(AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
@@ -25,15 +28,14 @@ public class AuthorService {
     }
 
     public Author save(AuthorRequest authorRequest) {
-        var author = new Author();
-        author.setName(authorRequest.name());
+        var author = modelMapper.map(authorRequest, Author.class);
         return authorRepository.save(author);
     }
 
     public void update(AuthorRequest authorReq, Long id) {
         var author = getById(id);
 
-        author.setName(authorReq.name());
+        author.setName(authorReq.getName());
         authorRepository.save(author);
     }
 
