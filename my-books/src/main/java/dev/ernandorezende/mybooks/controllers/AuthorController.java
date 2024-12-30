@@ -1,7 +1,7 @@
 package dev.ernandorezende.mybooks.controllers;
 
 import dev.ernandorezende.mybooks.dtos.requests.AuthorRequest;
-import dev.ernandorezende.mybooks.entities.Author;
+import dev.ernandorezende.mybooks.dtos.responses.AuthorResponse;
 import dev.ernandorezende.mybooks.services.AuthorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +19,17 @@ public class AuthorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Author>> getAllAuthors() {
+    public ResponseEntity<List<AuthorResponse>> getAllAuthors() {
         return ResponseEntity.ok(authorService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Author> getAuthorById(@PathVariable Long id) {
+    public ResponseEntity<AuthorResponse> getAuthorById(@PathVariable Long id) {
         return ResponseEntity.ok(authorService.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Author> saveAuthor(@RequestBody AuthorRequest author) {
+    public ResponseEntity<AuthorResponse> saveAuthor(@RequestBody AuthorRequest author) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authorService.save(author));
     }
 
