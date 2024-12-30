@@ -1,6 +1,7 @@
 package dev.ernandorezende.mybooks.services;
 
 import dev.ernandorezende.mybooks.dtos.requests.PublisherRequest;
+import dev.ernandorezende.mybooks.dtos.responses.PublisherResponse;
 import dev.ernandorezende.mybooks.entities.Publisher;
 import dev.ernandorezende.mybooks.exceptions.PublisherNotFoundException;
 import dev.ernandorezende.mybooks.repositories.PublisherRepository;
@@ -8,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PublisherService {
@@ -19,29 +21,38 @@ public class PublisherService {
         this.publisherRepository = publisherRepository;
     }
 
-    public Publisher create(PublisherRequest publisherReq) {
-        Publisher publisher = modelMapper.map(publisherReq, Publisher.class);
-        return publisherRepository.save(publisher);
+    public PublisherResponse create(PublisherRequest publisherReq) {
+        Publisher publisher  = new Publisher(publisherReq.name());
+        publisher = publisherRepository.save(publisher);
+        return toResponse(publisher);
     }
 
-    public Publisher getById(Long id) {
-        return publisherRepository.findById(id).orElseThrow(PublisherNotFoundException::new);
+    public PublisherResponse getById(Long id) {
+        return toResponse(findById(id));
     }
 
     public void update(PublisherRequest publisherReq, Long id) {
-        var publisher = getById(id);
-
-        publisher.setName(publisherReq.getName());
+        Publisher publisher = findById(id);
+        publisher.setName(publisherReq.name());
         publisherRepository.save(publisher);
     }
 
-    public List<Publisher> getAll() {
-        return publisherRepository.findAll();
+    public List<PublisherResponse> getAll() {
+        return publisherRepository.findAll().stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 
     public void delete(Long id) {
         publisherRepository.deleteById(id);
     }
 
+    private Publisher findById(Long id) {
+        return publisherRepository.findById(id).orElseThrow(PublisherNotFoundException::new);
+    }
+
+    private PublisherResponse toResponse(Publisher publisher) {
+        return modelMapper.map(publisher, PublisherResponse.class);
+    }
 
 }

@@ -1,6 +1,7 @@
 package dev.ernandorezende.mybooks.controllers;
 
 import dev.ernandorezende.mybooks.dtos.requests.PublisherRequest;
+import dev.ernandorezende.mybooks.dtos.responses.PublisherResponse;
 import dev.ernandorezende.mybooks.entities.Publisher;
 import dev.ernandorezende.mybooks.services.PublisherService;
 import org.springframework.http.HttpStatus;
@@ -20,17 +21,17 @@ public class PublisherController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Publisher>> getAllPublishers() {
+    public ResponseEntity<List<PublisherResponse>> getAllPublishers() {
         return ResponseEntity.ok(this.publisherService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Publisher> getPublisherById(@PathVariable Long id) {
+    public ResponseEntity<PublisherResponse> getPublisherById(@PathVariable Long id) {
         return ResponseEntity.ok(this.publisherService.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Publisher> savePublisher(@RequestBody PublisherRequest publisher) {
+    public ResponseEntity<PublisherResponse> savePublisher(@RequestBody PublisherRequest publisher) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.publisherService.create(publisher));
     }
 
