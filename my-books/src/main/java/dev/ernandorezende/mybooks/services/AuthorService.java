@@ -32,7 +32,7 @@ public class AuthorService {
     }
 
     public AuthorResponse save(AuthorRequest authorRequest) {
-        var author = modelMapper.map(authorRequest, Author.class);
+        var author = new Author(authorRequest.name());
         return toResponse(authorRepository.save(author));
     }
 
