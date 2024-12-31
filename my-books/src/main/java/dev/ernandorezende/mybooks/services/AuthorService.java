@@ -14,11 +14,12 @@ import java.util.stream.Collectors;
 @Service
 public class AuthorService {
     private final AuthorRepository authorRepository;
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
 
-    public AuthorService(AuthorRepository authorRepository) {
+    public AuthorService(AuthorRepository authorRepository, ModelMapper modelMapper) {
         this.authorRepository = authorRepository;
+        this.modelMapper = modelMapper;
     }
 
     public List<AuthorResponse> getAll() {
