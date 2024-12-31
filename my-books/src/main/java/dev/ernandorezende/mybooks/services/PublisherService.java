@@ -14,11 +14,12 @@ import java.util.stream.Collectors;
 @Service
 public class PublisherService {
 
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
     private final PublisherRepository publisherRepository;
 
-    public PublisherService(PublisherRepository publisherRepository) {
+    public PublisherService(PublisherRepository publisherRepository, ModelMapper modelMapper) {
         this.publisherRepository = publisherRepository;
+        this.modelMapper = modelMapper;
     }
 
     public PublisherResponse create(PublisherRequest publisherReq) {
