@@ -7,6 +7,9 @@ import dev.ernandorezende.mybooks.repositories.BookRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class BookService {
 
@@ -23,6 +26,10 @@ public class BookService {
         book = bookRepository.save(book);
 
         return toResponse(book);
+    }
+
+    public List<BookResponse> getAll() {
+        return bookRepository.findAll().stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     private Book toEntity(BooksRequest booksRequest) {

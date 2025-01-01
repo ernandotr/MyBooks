@@ -14,6 +14,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -35,17 +37,28 @@ public class BookServiceTest {
         BooksRequest booksRequest = new BooksRequest();
         booksRequest.setTitle("Title");
 
-        Book book = buildExpectedBook();
+        Book book = buildExpectedBook(1L,"Title1");
         when(bookRepository.save(any(Book.class))).thenReturn(book);
         BookResponse response = bookService.save(booksRequest);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(book.getTitle(), response.getTitle());
     }
 
-    private static Book buildExpectedBook() {
+    @Test
+    void getAllBooks() {
+        Book book = buildExpectedBook(1L, "Title1");
+        when(bookRepository.findAll()).thenReturn(List.of(book));
+        List<BookResponse> response = bookService.getAll();
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(1, response.size());
+        Assertions.assertEquals(book.getTitle(), response.get(0).getTitle());
+    }
+
+    private static Book buildExpectedBook(Long id, String title) {
         Book book = new Book();
-        book.setId(1L);
-        book.setTitle("Title");
+        book.setId(id);
+        book.setTitle(title);
         return book;
     }
 
