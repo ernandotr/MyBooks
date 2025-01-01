@@ -73,6 +73,10 @@ public class BookService {
         return toResponse(book);
     }
 
+    public void delete(Long id) {
+        bookRepository.deleteById(id);
+    }
+
     private Book toEntity(BooksRequest booksRequest) {
         return modelMapper.map(booksRequest, Book.class);
     }
