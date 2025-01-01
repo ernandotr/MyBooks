@@ -27,4 +27,10 @@ public class BookController {
     public ResponseEntity<List<BookResponse>> getAllBooks() {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.getAll());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BookResponse> getBookById(@PathVariable("id") Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.getById(id));
+    }
+
 }
