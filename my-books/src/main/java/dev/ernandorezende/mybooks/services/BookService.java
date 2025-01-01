@@ -68,6 +68,11 @@ public class BookService {
         return bookRepository.findAll().stream().map(this::toResponse).collect(Collectors.toList());
     }
 
+    public BookResponse getById(Long id) {
+        var book = bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
+        return toResponse(book);
+    }
+
     private Book toEntity(BooksRequest booksRequest) {
         return modelMapper.map(booksRequest, Book.class);
     }

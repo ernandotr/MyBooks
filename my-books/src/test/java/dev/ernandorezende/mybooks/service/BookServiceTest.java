@@ -6,6 +6,7 @@ import dev.ernandorezende.mybooks.entities.Author;
 import dev.ernandorezende.mybooks.entities.Book;
 import dev.ernandorezende.mybooks.entities.Publisher;
 import dev.ernandorezende.mybooks.exceptions.AuthorNotFoundException;
+import dev.ernandorezende.mybooks.exceptions.BookNotFoundException;
 import dev.ernandorezende.mybooks.exceptions.PublisherNotFoundException;
 import dev.ernandorezende.mybooks.repositories.AuthorRepository;
 import dev.ernandorezende.mybooks.repositories.BookRepository;
@@ -26,7 +27,6 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-//@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class BookServiceTest {
 
@@ -48,7 +48,7 @@ public class BookServiceTest {
         BooksRequest booksRequest = new BooksRequest();
         booksRequest.setTitle("Title");
 
-        Book book = buildExpectedBook(1L,"Title1");
+        Book book = buildExpectedBook();
         Author author = buildAuthor();
         Publisher publisher = buildPublisher();
 
@@ -65,7 +65,7 @@ public class BookServiceTest {
         BooksRequest booksRequest = new BooksRequest();
         booksRequest.setTitle("Title");
 
-        when(authorRepository.findById(anyLong())).thenThrow(AuthorNotFoundException.class);
+        when(authorRepository.findById(anyLong())).thenReturn(Optional.empty());
         Assertions.assertThrows(AuthorNotFoundException.class, () -> bookService.create(booksRequest));
     }
 
@@ -76,19 +76,35 @@ public class BookServiceTest {
 
         Author author = buildAuthor();
         when(authorRepository.findById(anyLong())).thenReturn(Optional.of(author));
-        when(publisherRepository.findById(anyLong())).thenThrow(PublisherNotFoundException.class);
+        when(publisherRepository.findById(anyLong())).thenReturn(Optional.empty());
         Assertions.assertThrows(PublisherNotFoundException.class, () -> bookService.create(booksRequest));
     }
 
     @Test
     void getAllBooks() {
-        Book book = buildExpectedBook(1L, "Title1");
+        Book book = buildExpectedBook();
         when(bookRepository.findAll()).thenReturn(List.of(book));
         List<BookResponse> response = bookService.getAll();
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(1, response.size());
-        Assertions.assertEquals(book.getTitle(), response.get(0).getTitle());
+        Assertions.assertEquals(book.getTitle(), response.getFirst().getTitle());
+    }
+
+    @Test
+    void getBookByIdSuccess() {
+        Book book = buildExpectedBook();
+        when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
+        BookResponse response = bookService.getById(1L);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(book.getTitle(), response.getTitle());
+    }
+
+    @Test
+    void getBookByIdFailureBookNotFound() {
+        when(bookRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Assertions.assertThrows(BookNotFoundException.class, () -> bookService.getById(2L));
+
     }
 
     @Test
@@ -96,7 +112,7 @@ public class BookServiceTest {
         BooksRequest booksRequest = new BooksRequest();
         booksRequest.setTitle("Title");
 
-        Book book = buildExpectedBook(1L, "Title1");
+        Book book = buildExpectedBook();
         Author author = buildAuthor();
         Publisher publisher = buildPublisher();
 
@@ -115,35 +131,48 @@ public class BookServiceTest {
         BooksRequest booksRequest = new BooksRequest();
         booksRequest.setTitle("Title");
 
-        when(authorRepository.findById(anyLong())).thenThrow(AuthorNotFoundException.class);
+        when(authorRepository.findById(anyLong())).thenReturn(Optional.empty());
         Assertions.assertThrows(AuthorNotFoundException.class, () -> bookService.update(booksRequest, 1L));
     }
 
     @Test
     void updateBookFailurePublisherNotFound() {
         BooksRequest booksRequest = new BooksRequest();
-        booksRequest.setTitle("Title");
+        booksRequest.setTitle("Title2");
 
         Author author = buildAuthor();
         when(authorRepository.findById(anyLong())).thenReturn(Optional.of(author));
-        when(publisherRepository.findById(anyLong())).thenThrow(PublisherNotFoundException.class);
-        Assertions.assertThrows(PublisherNotFoundException.class, () -> bookService.update(booksRequest, 1L));
+        when(publisherRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Assertions.assertThrows(PublisherNotFoundException.class, () -> bookService.update(booksRequest, 2L));
     }
 
+    @Test
+    void updateBookFailureBookNotFound() {
+        BooksRequest booksRequest = new BooksRequest();
+        booksRequest.setTitle("Title");
+
+        Author author = buildAuthor();
+        Publisher publisher = buildPublisher();
+
+        when(authorRepository.findById(anyLong())).thenReturn(Optional.of(author));
+        when(publisherRepository.findById(anyLong())).thenReturn(Optional.of(publisher));
+        when(bookRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Assertions.assertThrows(BookNotFoundException.class, () -> bookService.update(booksRequest, 1L));
+    }
+
+
     private static Publisher buildPublisher() {
-        Publisher publisher = new Publisher("Publisher1");
-        return publisher;
+        return new Publisher("Publisher1");
     }
 
     private static Author buildAuthor() {
-        Author author = new Author("Author1");
-        return author;
+        return new Author("Author1");
     }
 
-    private static Book buildExpectedBook(Long id, String title) {
+    private static Book buildExpectedBook() {
         Book book = new Book();
-        book.setId(id);
-        book.setTitle(title);
+        book.setId(1L);
+        book.setTitle("Title1");
         return book;
     }
 
