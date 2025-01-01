@@ -5,6 +5,8 @@ import dev.ernandorezende.mybooks.dtos.responses.BookResponse;
 import dev.ernandorezende.mybooks.entities.Author;
 import dev.ernandorezende.mybooks.entities.Book;
 import dev.ernandorezende.mybooks.entities.Publisher;
+import dev.ernandorezende.mybooks.exceptions.AuthorNotFoundException;
+import dev.ernandorezende.mybooks.exceptions.PublisherNotFoundException;
 import dev.ernandorezende.mybooks.repositories.AuthorRepository;
 import dev.ernandorezende.mybooks.repositories.BookRepository;
 import dev.ernandorezende.mybooks.repositories.PublisherRepository;
@@ -47,10 +49,35 @@ public class BookServiceTest {
         booksRequest.setTitle("Title");
 
         Book book = buildExpectedBook(1L,"Title1");
+        Author author = buildAuthor();
+        Publisher publisher = buildPublisher();
+
+        when(authorRepository.findById(anyLong())).thenReturn(Optional.of(author));
+        when(publisherRepository.findById(anyLong())).thenReturn(Optional.of(publisher));
         when(bookRepository.save(any(Book.class))).thenReturn(book);
         BookResponse response = bookService.save(booksRequest);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(book.getTitle(), response.getTitle());
+    }
+
+    @Test
+    void saveBookFailureAuthorNotFound() {
+        BooksRequest booksRequest = new BooksRequest();
+        booksRequest.setTitle("Title");
+
+        when(authorRepository.findById(anyLong())).thenThrow(AuthorNotFoundException.class);
+        Assertions.assertThrows(AuthorNotFoundException.class, () -> bookService.save(booksRequest));
+    }
+
+    @Test
+    void saveBookFailurePublisherNotFound() {
+        BooksRequest booksRequest = new BooksRequest();
+        booksRequest.setTitle("Title");
+
+        Author author = buildAuthor();
+        when(authorRepository.findById(anyLong())).thenReturn(Optional.of(author));
+        when(publisherRepository.findById(anyLong())).thenThrow(PublisherNotFoundException.class);
+        Assertions.assertThrows(PublisherNotFoundException.class, () -> bookService.save(booksRequest));
     }
 
     @Test
@@ -70,8 +97,8 @@ public class BookServiceTest {
         booksRequest.setTitle("Title");
 
         Book book = buildExpectedBook(1L, "Title1");
-        Author author = new Author("Author1");
-        Publisher publisher = new Publisher("Publisher1");
+        Author author = buildAuthor();
+        Publisher publisher = buildPublisher();
 
         when(authorRepository.findById(anyLong())).thenReturn(Optional.of(author));
         when(publisherRepository.findById(anyLong())).thenReturn(Optional.of(publisher));
@@ -81,6 +108,16 @@ public class BookServiceTest {
         bookService.update(booksRequest, 1L);
 
         verify(bookRepository, times(1)).save(any(Book.class));
+    }
+
+    private static Publisher buildPublisher() {
+        Publisher publisher = new Publisher("Publisher1");
+        return publisher;
+    }
+
+    private static Author buildAuthor() {
+        Author author = new Author("Author1");
+        return author;
     }
 
     private static Book buildExpectedBook(Long id, String title) {

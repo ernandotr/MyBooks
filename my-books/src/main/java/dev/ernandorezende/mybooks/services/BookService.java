@@ -34,8 +34,8 @@ public class BookService {
     }
 
     public BookResponse save(BooksRequest booksRequest) {
-        Author author = authorRepository.getReferenceById(booksRequest.getAuthor());
-        Publisher publisher = publisherRepository.getReferenceById(booksRequest.getPublisher());
+        Author author = authorRepository.findById(booksRequest.getAuthor()).orElseThrow(AuthorNotFoundException::new);
+        Publisher publisher = publisherRepository.findById(booksRequest.getPublisher()).orElseThrow(PublisherNotFoundException::new);
 
         Book book = toEntity(booksRequest);
         book.setAuthor(author);
