@@ -2,8 +2,12 @@ package dev.ernandorezende.mybooks.services;
 
 import dev.ernandorezende.mybooks.dtos.requests.BooksRequest;
 import dev.ernandorezende.mybooks.dtos.responses.BookResponse;
+import dev.ernandorezende.mybooks.entities.Author;
 import dev.ernandorezende.mybooks.entities.Book;
+import dev.ernandorezende.mybooks.entities.Publisher;
+import dev.ernandorezende.mybooks.repositories.AuthorRepository;
 import dev.ernandorezende.mybooks.repositories.BookRepository;
+import dev.ernandorezende.mybooks.repositories.PublisherRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -13,16 +17,26 @@ import java.util.stream.Collectors;
 @Service
 public class BookService {
 
+    private final AuthorRepository authorRepository;
+    private  final PublisherRepository publisherRepository;
     private final BookRepository bookRepository;
     private final ModelMapper modelMapper;
 
-    public BookService(BookRepository bookRepository, ModelMapper modelMapper) {
+    public BookService(BookRepository bookRepository, ModelMapper modelMapper,
+                       AuthorRepository authorRepository, PublisherRepository publisherRepository) {
+
         this.bookRepository = bookRepository;
         this.modelMapper = modelMapper;
+        this.authorRepository = authorRepository;
+        this.publisherRepository = publisherRepository;
     }
 
     public BookResponse save(BooksRequest booksRequest) {
+        Author author = authorRepository.getReferenceById(booksRequest.getAuthor());
+        Publisher publisher = publisherRepository.getReferenceById(booksRequest.getPublisher());
         Book book = toEntity(booksRequest);
+        book.setAuthor(author);
+        book.setPublisher(publisher);
         book = bookRepository.save(book);
 
         return toResponse(book);
