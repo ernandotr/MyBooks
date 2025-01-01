@@ -55,7 +55,7 @@ public class BookServiceTest {
         when(authorRepository.findById(anyLong())).thenReturn(Optional.of(author));
         when(publisherRepository.findById(anyLong())).thenReturn(Optional.of(publisher));
         when(bookRepository.save(any(Book.class))).thenReturn(book);
-        BookResponse response = bookService.save(booksRequest);
+        BookResponse response = bookService.create(booksRequest);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(book.getTitle(), response.getTitle());
     }
@@ -66,7 +66,7 @@ public class BookServiceTest {
         booksRequest.setTitle("Title");
 
         when(authorRepository.findById(anyLong())).thenThrow(AuthorNotFoundException.class);
-        Assertions.assertThrows(AuthorNotFoundException.class, () -> bookService.save(booksRequest));
+        Assertions.assertThrows(AuthorNotFoundException.class, () -> bookService.create(booksRequest));
     }
 
     @Test
@@ -77,7 +77,7 @@ public class BookServiceTest {
         Author author = buildAuthor();
         when(authorRepository.findById(anyLong())).thenReturn(Optional.of(author));
         when(publisherRepository.findById(anyLong())).thenThrow(PublisherNotFoundException.class);
-        Assertions.assertThrows(PublisherNotFoundException.class, () -> bookService.save(booksRequest));
+        Assertions.assertThrows(PublisherNotFoundException.class, () -> bookService.create(booksRequest));
     }
 
     @Test
@@ -108,6 +108,26 @@ public class BookServiceTest {
         bookService.update(booksRequest, 1L);
 
         verify(bookRepository, times(1)).save(any(Book.class));
+    }
+
+    @Test
+    void updateBookFailureAuthorNotFound() {
+        BooksRequest booksRequest = new BooksRequest();
+        booksRequest.setTitle("Title");
+
+        when(authorRepository.findById(anyLong())).thenThrow(AuthorNotFoundException.class);
+        Assertions.assertThrows(AuthorNotFoundException.class, () -> bookService.update(booksRequest, 1L));
+    }
+
+    @Test
+    void updateBookFailurePublisherNotFound() {
+        BooksRequest booksRequest = new BooksRequest();
+        booksRequest.setTitle("Title");
+
+        Author author = buildAuthor();
+        when(authorRepository.findById(anyLong())).thenReturn(Optional.of(author));
+        when(publisherRepository.findById(anyLong())).thenThrow(PublisherNotFoundException.class);
+        Assertions.assertThrows(PublisherNotFoundException.class, () -> bookService.update(booksRequest, 1L));
     }
 
     private static Publisher buildPublisher() {
