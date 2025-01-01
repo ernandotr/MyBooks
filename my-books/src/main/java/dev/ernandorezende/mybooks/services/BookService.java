@@ -33,7 +33,7 @@ public class BookService {
         this.publisherRepository = publisherRepository;
     }
 
-    public BookResponse save(BooksRequest booksRequest) {
+    public BookResponse create(BooksRequest booksRequest) {
         Author author = authorRepository.findById(booksRequest.getAuthor()).orElseThrow(AuthorNotFoundException::new);
         Publisher publisher = publisherRepository.findById(booksRequest.getPublisher()).orElseThrow(PublisherNotFoundException::new);
 
