@@ -1,6 +1,7 @@
 package dev.ernandorezende.mybooks.exceptions.handlers;
 
 import dev.ernandorezende.mybooks.exceptions.AuthorNotFoundException;
+import dev.ernandorezende.mybooks.exceptions.BookNotFoundException;
 import dev.ernandorezende.mybooks.exceptions.PublisherNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,16 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(),
                 ex.getMessage(),
                 request.getDescription(false));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails);
+    }
+
+    @ExceptionHandler(BookNotFoundException.class)
+    ResponseEntity<ErrorDetails> handleBookNotFoundException(BookNotFoundException ex, WebRequest request) {
+        var errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails);
     }
 }
