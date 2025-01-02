@@ -58,6 +58,7 @@ public class BookService {
             book.setLanguage(booksRequest.getLanguage());
             book.setPages(booksRequest.getPages());
             book.setUrl(booksRequest.getUrl());
+            book.setEdition(booksRequest.getEdition());
             bookRepository.save(book);
         } catch (Exception e) {
             throw new RuntimeException("Could not update book", e);

@@ -17,6 +17,7 @@ public class Book {
     private String genre;
     private String language;
     private String url;
+    private String edition;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
@@ -82,6 +83,14 @@ public class Book {
         this.url = url;
     }
 
+    public String getEdition() {
+        return edition;
+    }
+
+    public void setEdition(String edition) {
+        this.edition = edition;
+    }
+
     public Author getAuthor() {
         return author;
     }
@@ -121,6 +130,7 @@ public class Book {
                 ", url='" + url + '\'' +
                 ", author=" + author +
                 ", publisher=" + publisher +
+                ", edition=" + edition +
                 '}';
     }
 }

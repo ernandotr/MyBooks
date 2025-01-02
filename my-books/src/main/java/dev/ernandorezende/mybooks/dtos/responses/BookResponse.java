@@ -8,6 +8,7 @@ public class BookResponse {
     private String genre;
     private String language;
     private String url;
+    private String edition;
     private AuthorResponse author;
     private PublisherResponse publisher;
 
@@ -65,6 +66,14 @@ public class BookResponse {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getEdition() {
+        return edition;
+    }
+
+    public void setEdition(String edition) {
+        this.edition = edition;
     }
 
     public AuthorResponse getAuthor() {
