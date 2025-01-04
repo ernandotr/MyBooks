@@ -6,6 +6,8 @@ import dev.ernandorezende.mybooks.entities.Author;
 import dev.ernandorezende.mybooks.exceptions.AuthorNotFoundException;
 import dev.ernandorezende.mybooks.repositories.AuthorRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,10 +24,10 @@ public class AuthorService {
         this.modelMapper = modelMapper;
     }
 
-    public List<AuthorResponse> getAll() {
-        return authorRepository.findAll().stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
+    public Page<Author> getAll(Pageable pageable) {
+        return authorRepository.findAll(pageable);
+//                .map(this::toResponse)
+//                .collect(Collectors.());
     }
 
     public AuthorResponse getById(Long id) {
