@@ -33,7 +33,7 @@ public class AuthorController {
             @ApiResponse(responseCode = "200", description = "successful operation"),
             @ApiResponse(responseCode = "500", description = "internal server errors")
     })
-    @GetMapping
+    @GetMapping(produces = {"application/json", "application/xml"})
     public ResponseEntity<Page<Author>> getAllAuthors(@PageableDefault(page = 0, size = 10) Pageable pageable ) {
         return ResponseEntity.ok(authorService.getAll(pageable));
     }
