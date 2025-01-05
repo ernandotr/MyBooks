@@ -30,14 +30,23 @@ public class AuthorController {
             description = "fetch all author entities containing id and and name fields"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successful operation"),
-            @ApiResponse(responseCode = "500", description = "internal server errors")
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "500", description = "Internal server errors")
     })
     @GetMapping(produces = {"application/json", "application/xml"})
     public ResponseEntity<Page<Author>> getAllAuthors(@PageableDefault(page = 0, size = 10) Pageable pageable ) {
         return ResponseEntity.ok(authorService.getAll(pageable));
     }
 
+    @Operation(
+            summary = "Fetch an specific author",
+            description = "fetch an author by ID"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "404", description = "Resource not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server errors")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<AuthorResponse> getAuthorById(@PathVariable Long id) {
         return ResponseEntity.ok(authorService.getById(id));
