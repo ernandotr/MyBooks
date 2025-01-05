@@ -48,7 +48,7 @@ public class AuthorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(authorService.save(author));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = {"application/json", "application/xml"})
     public ResponseEntity<Void> updateAuthor(@PathVariable Long id, @RequestBody AuthorRequest author) {
         authorService.update(author, id);
         return ResponseEntity.noContent().build();
