@@ -94,6 +94,16 @@ public class AuthorController {
     }
 
 
+    @Operation(
+            summary = "Delete an author",
+            parameters = {@Parameter(in = ParameterIn.PATH, name = "id", required = true, description = "Author Id")},
+            description = "Allows the user delete an author by Id"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successful operation"),
+            @ApiResponse(responseCode = "500", description = "Internal server errors",
+                    content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
+    })
     @DeleteMapping(value = "/{id}", produces = {"application/json", "application/xml"})
     public ResponseEntity<Void> deleteAuthor(@PathVariable Long id) {
         authorService.delete(id);
