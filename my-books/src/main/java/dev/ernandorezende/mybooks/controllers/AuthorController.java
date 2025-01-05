@@ -3,8 +3,11 @@ package dev.ernandorezende.mybooks.controllers;
 import dev.ernandorezende.mybooks.dtos.requests.AuthorRequest;
 import dev.ernandorezende.mybooks.dtos.responses.AuthorResponse;
 import dev.ernandorezende.mybooks.entities.Author;
+import dev.ernandorezende.mybooks.exceptions.handlers.ErrorDetails;
 import dev.ernandorezende.mybooks.services.AuthorService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +34,8 @@ public class AuthorController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "500", description = "Internal server errors")
+            @ApiResponse(responseCode = "500", description = "Internal server errors",
+                    content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @GetMapping(produces = {"application/json", "application/xml"})
     public ResponseEntity<Page<Author>> getAllAuthors(@PageableDefault(page = 0, size = 10) Pageable pageable ) {
@@ -44,8 +48,10 @@ public class AuthorController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "404", description = "Resource not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server errors")
+            @ApiResponse(responseCode = "404", description = "Resource not found",
+                    content = @Content(schema = @Schema(implementation = ErrorDetails.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server errors",
+                    content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @GetMapping(value = "/{id}", produces = {"application/json", "application/xml"})
     public ResponseEntity<AuthorResponse> getAuthorById(@PathVariable Long id) {
@@ -58,7 +64,8 @@ public class AuthorController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201" , description = "Successful operation"),
-            @ApiResponse(responseCode = "500", description = "Internal server errors")
+            @ApiResponse(responseCode = "500", description = "Internal server errors",
+                    content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
     public ResponseEntity<AuthorResponse> saveAuthor(@RequestBody AuthorRequest author) {
