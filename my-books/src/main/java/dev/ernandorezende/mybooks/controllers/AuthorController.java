@@ -6,6 +6,8 @@ import dev.ernandorezende.mybooks.entities.Author;
 import dev.ernandorezende.mybooks.exceptions.handlers.ErrorDetails;
 import dev.ernandorezende.mybooks.services.AuthorService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -44,6 +46,7 @@ public class AuthorController {
 
     @Operation(
             summary = "Fetch an specific author",
+            parameters = {@Parameter(in = ParameterIn.PATH, name = "id", description = "Author Id")},
             description = "fetch an author by ID"
     )
     @ApiResponses(value = {
@@ -72,11 +75,24 @@ public class AuthorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(authorService.save(author));
     }
 
-    @PutMapping(value = "/{id}", consumes = {"application/json", "application/xml"})
+    @Operation(
+            summary = "Update an author",
+            parameters = {@Parameter(in = ParameterIn.PATH, name = "id", required = true, description = "Author Id")},
+            description = "Allows the update the author information"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successful operation"),
+            @ApiResponse(responseCode = "404", description = "Resource not found",
+                    content = @Content(schema = @Schema(implementation = ErrorDetails.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server errors",
+                    content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
+    })
+    @PutMapping(value = "/{id}", consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
     public ResponseEntity<Void> updateAuthor(@PathVariable Long id, @RequestBody AuthorRequest author) {
         authorService.update(author, id);
         return ResponseEntity.noContent().build();
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAuthor(@PathVariable Long id) {
