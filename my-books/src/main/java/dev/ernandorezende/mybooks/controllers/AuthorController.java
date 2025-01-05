@@ -43,7 +43,7 @@ public class AuthorController {
         return ResponseEntity.ok(authorService.getById(id));
     }
 
-    @PostMapping
+    @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
     public ResponseEntity<AuthorResponse> saveAuthor(@RequestBody AuthorRequest author) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authorService.save(author));
     }
