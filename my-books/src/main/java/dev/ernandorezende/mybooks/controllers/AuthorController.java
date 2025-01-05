@@ -47,7 +47,7 @@ public class AuthorController {
             @ApiResponse(responseCode = "404", description = "Resource not found"),
             @ApiResponse(responseCode = "500", description = "Internal server errors")
     })
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = {"application/json", "application/xml"})
     public ResponseEntity<AuthorResponse> getAuthorById(@PathVariable Long id) {
         return ResponseEntity.ok(authorService.getById(id));
     }
@@ -60,12 +60,12 @@ public class AuthorController {
             @ApiResponse(responseCode = "201" , description = "Successful operation"),
             @ApiResponse(responseCode = "500", description = "Internal server errors")
     })
-    @PostMapping
+    @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
     public ResponseEntity<AuthorResponse> saveAuthor(@RequestBody AuthorRequest author) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authorService.save(author));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = {"application/json", "application/xml"})
     public ResponseEntity<Void> updateAuthor(@PathVariable Long id, @RequestBody AuthorRequest author) {
         authorService.update(author, id);
         return ResponseEntity.noContent().build();
