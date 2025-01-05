@@ -94,7 +94,7 @@ public class AuthorController {
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", produces = {"application/json", "application/xml"})
     public ResponseEntity<Void> deleteAuthor(@PathVariable Long id) {
         authorService.delete(id);
         return ResponseEntity.noContent().build();
