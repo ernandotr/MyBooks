@@ -38,7 +38,7 @@ public class AuthorController {
         return ResponseEntity.ok(authorService.getAll(pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = {"application/json", "application/xml"})
     public ResponseEntity<AuthorResponse> getAuthorById(@PathVariable Long id) {
         return ResponseEntity.ok(authorService.getById(id));
     }
