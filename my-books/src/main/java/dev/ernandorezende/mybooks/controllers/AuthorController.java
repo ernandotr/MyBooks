@@ -52,6 +52,14 @@ public class AuthorController {
         return ResponseEntity.ok(authorService.getById(id));
     }
 
+    @Operation(
+            summary = "Create a new author",
+            description = "Allows the user create a new author, send the name in a xml or json payload format"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201" , description = "Successful operation"),
+            @ApiResponse(responseCode = "500", description = "Internal server errors")
+    })
     @PostMapping
     public ResponseEntity<AuthorResponse> saveAuthor(@RequestBody AuthorRequest author) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authorService.save(author));
