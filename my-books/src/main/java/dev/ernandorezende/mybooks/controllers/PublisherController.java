@@ -2,7 +2,6 @@ package dev.ernandorezende.mybooks.controllers;
 
 import dev.ernandorezende.mybooks.dtos.requests.PublisherRequest;
 import dev.ernandorezende.mybooks.dtos.responses.PublisherResponse;
-import dev.ernandorezende.mybooks.entities.Publisher;
 import dev.ernandorezende.mybooks.exceptions.handlers.ErrorDetails;
 import dev.ernandorezende.mybooks.services.PublisherService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,8 +69,8 @@ public class PublisherController {
             @ApiResponse(responseCode = "500", description = "Internal server errors",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @PostMapping
-    public ResponseEntity<PublisherResponse> savePublisher(@RequestBody PublisherRequest publisher) {
+    @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
+    public ResponseEntity<PublisherResponse> createPublisher(@RequestBody PublisherRequest publisher) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.publisherService.create(publisher));
     }
 
