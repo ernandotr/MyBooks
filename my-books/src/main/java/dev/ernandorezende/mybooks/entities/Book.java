@@ -2,7 +2,9 @@ package dev.ernandorezende.mybooks.entities;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "books")
@@ -19,9 +21,8 @@ public class Book {
     private String url;
     private String edition;
 
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private Author author;
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Author> authors = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "publisher_id")
@@ -91,12 +92,12 @@ public class Book {
         this.edition = edition;
     }
 
-    public Author getAuthor() {
-        return author;
+    public Set<Author> getAuthors() {
+        return this.authors;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
     }
 
     public Publisher getPublisher() {
@@ -128,7 +129,7 @@ public class Book {
                 ", genre='" + genre + '\'' +
                 ", language='" + language + '\'' +
                 ", url='" + url + '\'' +
-                ", author=" + author +
+                ", author=" + authors.toString() +
                 ", publisher=" + publisher +
                 ", edition=" + edition +
                 '}';

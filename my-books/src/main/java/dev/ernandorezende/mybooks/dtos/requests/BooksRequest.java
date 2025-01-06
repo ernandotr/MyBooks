@@ -1,5 +1,8 @@
 package dev.ernandorezende.mybooks.dtos.requests;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BooksRequest {
     private String title;
     private String isbn;
@@ -9,7 +12,7 @@ public class BooksRequest {
     private String url;
     private String edition;
     private long publisher;
-    private long author;
+    private List<Long> authors = new ArrayList<>();
 
     public String getTitle() {
         return title;
@@ -75,11 +78,11 @@ public class BooksRequest {
         this.publisher = publisher;
     }
 
-    public long getAuthor() {
-        return author;
+    public List<Long> getAuthors() {
+        return authors;
     }
 
-    public void setAuthor(long author) {
-        this.author = author;
+    public void setAuthors(List<Long> authors) {
+        this.authors = authors;
     }
 }

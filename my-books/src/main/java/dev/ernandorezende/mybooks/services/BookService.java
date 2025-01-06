@@ -34,11 +34,14 @@ public class BookService {
     }
 
     public BookResponse create(BooksRequest booksRequest) {
-        Author author = authorRepository.findById(booksRequest.getAuthor()).orElseThrow(AuthorNotFoundException::new);
         Publisher publisher = publisherRepository.findById(booksRequest.getPublisher()).orElseThrow(PublisherNotFoundException::new);
 
         Book book = toEntity(booksRequest);
-        book.setAuthor(author);
+        book.getAuthors().clear();
+        for(Long authorId : booksRequest.getAuthors()) {
+            var author = authorRepository.findById(authorId).orElseThrow(AuthorNotFoundException::new);
+            book.getAuthors().add(author);
+        }
         book.setPublisher(publisher);
         book = bookRepository.save(book);
 
@@ -46,11 +49,14 @@ public class BookService {
     }
 
     public void update(BooksRequest booksRequest, Long id) {
-            Author author = authorRepository.findById(booksRequest.getAuthor()).orElseThrow(AuthorNotFoundException::new);
             Publisher publisher = publisherRepository.findById(booksRequest.getPublisher()).orElseThrow(PublisherNotFoundException::new);
             Book book = bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
         try {
-            book.setAuthor(author);
+            book.getAuthors().clear();
+            for(Long authorId : booksRequest.getAuthors()) {
+                var author = authorRepository.findById(authorId).orElseThrow(AuthorNotFoundException::new);
+                book.getAuthors().add(author);
+            }
             book.setPublisher(publisher);
             book.setTitle(booksRequest.getTitle());
             book.setIsbn(booksRequest.getIsbn());
