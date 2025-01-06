@@ -39,7 +39,7 @@ public class PublisherController {
             @ApiResponse(responseCode = "500", description = "Internal server errors",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @GetMapping
+    @GetMapping(produces = {"application/json", "application/xml"})
     public ResponseEntity<List<PublisherResponse>> getAllPublishers() {
         return ResponseEntity.ok(this.publisherService.getAll());
     }
