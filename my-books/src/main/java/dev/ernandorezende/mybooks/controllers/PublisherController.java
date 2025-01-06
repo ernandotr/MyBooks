@@ -86,7 +86,8 @@ public class PublisherController {
             @ApiResponse(responseCode = "500", description = "Internal server errors",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}",
+            consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
     public ResponseEntity<Void> updatePublisher(@PathVariable Long id, @RequestBody PublisherRequest publisher) {
         this.publisherService.update(publisher, id);
         return ResponseEntity.noContent().build();
@@ -102,7 +103,7 @@ public class PublisherController {
             @ApiResponse(responseCode = "500", description = "Internal server errors",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", produces = {"application/json", "application/xml"})
     public ResponseEntity<Void> deletePublisher(@PathVariable Long id) {
         this.publisherService.delete(id);
         return ResponseEntity.noContent().build();
