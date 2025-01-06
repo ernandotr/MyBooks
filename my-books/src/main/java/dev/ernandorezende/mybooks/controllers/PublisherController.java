@@ -2,7 +2,6 @@ package dev.ernandorezende.mybooks.controllers;
 
 import dev.ernandorezende.mybooks.dtos.requests.PublisherRequest;
 import dev.ernandorezende.mybooks.dtos.responses.PublisherResponse;
-import dev.ernandorezende.mybooks.entities.Publisher;
 import dev.ernandorezende.mybooks.exceptions.handlers.ErrorDetails;
 import dev.ernandorezende.mybooks.services.PublisherService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +38,7 @@ public class PublisherController {
             @ApiResponse(responseCode = "500", description = "Internal server errors",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @GetMapping
+    @GetMapping(produces = {"application/json", "application/xml"})
     public ResponseEntity<List<PublisherResponse>> getAllPublishers() {
         return ResponseEntity.ok(this.publisherService.getAll());
     }
@@ -56,7 +55,7 @@ public class PublisherController {
             @ApiResponse(responseCode = "500", description = "Internal server errors",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = {"application/json", "application/xml"})
     public ResponseEntity<PublisherResponse> getPublisherById(@PathVariable Long id) {
         return ResponseEntity.ok(this.publisherService.getById(id));
     }
@@ -70,8 +69,8 @@ public class PublisherController {
             @ApiResponse(responseCode = "500", description = "Internal server errors",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @PostMapping
-    public ResponseEntity<PublisherResponse> savePublisher(@RequestBody PublisherRequest publisher) {
+    @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
+    public ResponseEntity<PublisherResponse> createPublisher(@RequestBody PublisherRequest publisher) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.publisherService.create(publisher));
     }
 
@@ -87,7 +86,8 @@ public class PublisherController {
             @ApiResponse(responseCode = "500", description = "Internal server errors",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}",
+            consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
     public ResponseEntity<Void> updatePublisher(@PathVariable Long id, @RequestBody PublisherRequest publisher) {
         this.publisherService.update(publisher, id);
         return ResponseEntity.noContent().build();
@@ -103,7 +103,7 @@ public class PublisherController {
             @ApiResponse(responseCode = "500", description = "Internal server errors",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", produces = {"application/json", "application/xml"})
     public ResponseEntity<Void> deletePublisher(@PathVariable Long id) {
         this.publisherService.delete(id);
         return ResponseEntity.noContent().build();
