@@ -56,7 +56,7 @@ public class PublisherController {
             @ApiResponse(responseCode = "500", description = "Internal server errors",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = {"application/json", "application/xml"})
     public ResponseEntity<PublisherResponse> getPublisherById(@PathVariable Long id) {
         return ResponseEntity.ok(this.publisherService.getById(id));
     }
