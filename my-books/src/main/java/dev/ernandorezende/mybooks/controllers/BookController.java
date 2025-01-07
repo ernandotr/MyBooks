@@ -2,6 +2,7 @@ package dev.ernandorezende.mybooks.controllers;
 
 import dev.ernandorezende.mybooks.dtos.requests.BooksRequest;
 import dev.ernandorezende.mybooks.dtos.responses.BookResponse;
+import dev.ernandorezende.mybooks.dtos.responses.BookSummaryResponse;
 import dev.ernandorezende.mybooks.services.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookResponse>> getAllBooks() {
+    public ResponseEntity<List<BookSummaryResponse>> getAllBooks() {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.getAll());
     }
 

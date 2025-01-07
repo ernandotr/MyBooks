@@ -1,5 +1,6 @@
 package dev.ernandorezende.mybooks.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.*;
@@ -23,7 +24,8 @@ public class Book {
             joinColumns = @JoinColumn(name = "author_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
-    private List<Author> authors = new ArrayList<>();
+    @JsonIgnoreProperties("books")
+    private List<Author> authors;
 
     @ManyToOne
     @JoinColumn(name = "publisher_id")

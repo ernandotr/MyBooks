@@ -9,7 +9,7 @@ public class BookResponse {
     private String genre;
     private String language;
     private String url;
-    private List<AuthorResponse> authors;
+    private List<AuthorSummaryResponse> authors;
     private PublisherResponse publisher;
 
     public Long getId() {
@@ -60,11 +60,11 @@ public class BookResponse {
         this.url = url;
     }
 
-    public List<AuthorResponse> getAuthors() {
+    public List<AuthorSummaryResponse> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<AuthorResponse> authors) {
+    public void setAuthors(List<AuthorSummaryResponse> authors) {
         this.authors = authors;
     }
 

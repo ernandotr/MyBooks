@@ -2,6 +2,8 @@ package dev.ernandorezende.mybooks.services;
 
 import dev.ernandorezende.mybooks.dtos.requests.BooksRequest;
 import dev.ernandorezende.mybooks.dtos.responses.BookResponse;
+import dev.ernandorezende.mybooks.dtos.responses.BookSummaryResponse;
+import dev.ernandorezende.mybooks.entities.Author;
 import dev.ernandorezende.mybooks.entities.Book;
 import dev.ernandorezende.mybooks.entities.Publisher;
 import dev.ernandorezende.mybooks.exceptions.BookNotFoundException;
@@ -60,8 +62,8 @@ public class BookService {
         return publisherRepository.findById(booksRequest.getPublisher()).orElseThrow(PublisherNotFoundException::new);
     }
 
-    public List<BookResponse> getAll() {
-        return bookRepository.findAll().stream().map(this::toResponse).collect(Collectors.toList());
+    public List<BookSummaryResponse> getAll() {
+        return bookRepository.findAll().stream().map(this::toSummaryResponse).collect(Collectors.toList());
     }
 
     public BookResponse getBookById(Long id) {
@@ -78,6 +80,12 @@ public class BookService {
 
     private Book toEntity(BooksRequest booksRequest) {
         return modelMapper.map(booksRequest, Book.class);
+    }
+
+    private BookSummaryResponse toSummaryResponse(Book book) {
+        var response = modelMapper.map(book, BookSummaryResponse.class);
+        response.setAuthor(book.getAuthors().stream().map(Author::getName).collect(Collectors.joining(", ")));
+        return response;
     }
 
     private BookResponse toResponse(Book book) {
