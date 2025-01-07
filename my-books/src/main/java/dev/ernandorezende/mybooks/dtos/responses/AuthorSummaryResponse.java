@@ -1,12 +1,10 @@
 package dev.ernandorezende.mybooks.dtos.responses;
 
-import java.util.List;
 import java.util.Objects;
 
-public class AuthorResponse {
+public class AuthorSummaryResponse {
     private Long id;
     private String name;
-    private String books;
 
     public Long getId() {
         return id;
@@ -24,14 +22,6 @@ public class AuthorResponse {
         this.name = name;
     }
 
-    public String getBooks() {
-        return books;
-    }
-
-    public void setBooks(String books) {
-        this.books = books;
-    }
-
     @Override
     public String toString() {
         return "AuthorResponse{" +
@@ -39,5 +29,4 @@ public class AuthorResponse {
                 ", name='" + name + '\'' +
                 '}';
     }
-
 }

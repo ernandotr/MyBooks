@@ -3,8 +3,8 @@ package dev.ernandorezende.mybooks.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "author")
@@ -17,7 +17,7 @@ public class Author {
 
     @ManyToMany(mappedBy = "authors")
     @JsonIgnoreProperties("authors")
-    private List<Book> books;
+    private Set<Book> books;
 
     public Author() {}
 
@@ -41,11 +41,11 @@ public class Author {
         this.name = name;
     }
 
-    public List<Book> getBooks() {
+    public Set<Book> getBooks() {
         return books;
     }
 
-    public void setBooks(List<Book> books) {
+    public void setBooks(Set<Book> books) {
         this.books = books;
     }
 
