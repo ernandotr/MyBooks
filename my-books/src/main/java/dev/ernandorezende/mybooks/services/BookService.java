@@ -46,12 +46,10 @@ public class BookService {
             book.setAuthors(authorRepository.findAllById(booksRequest.getAuthors()));
             book.setPublisher(getPublisher(booksRequest));
             book.setTitle(booksRequest.getTitle());
-            book.setIsbn(booksRequest.getIsbn());
             book.setGenre(booksRequest.getGenre());
             book.setLanguage(booksRequest.getLanguage());
             book.setPages(booksRequest.getPages());
             book.setUrl(booksRequest.getUrl());
-            book.setEdition(booksRequest.getEdition());
             bookRepository.save(book);
         } catch (Exception e) {
             throw new RuntimeException("Could not update book", e);

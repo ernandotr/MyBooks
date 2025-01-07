@@ -12,12 +12,10 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private String isbn;
     private String pages;
     private String genre;
     private String language;
     private String url;
-    private String edition;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -45,14 +43,6 @@ public class Book {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
     }
 
     public String getPages() {
@@ -87,14 +77,6 @@ public class Book {
         this.url = url;
     }
 
-    public String getEdition() {
-        return edition;
-    }
-
-    public void setEdition(String edition) {
-        this.edition = edition;
-    }
-
     public List<Author> getAuthors() {
         return this.authors;
     }
@@ -127,14 +109,12 @@ public class Book {
         return "Book{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", isbn='" + isbn + '\'' +
                 ", pages='" + pages + '\'' +
                 ", genre='" + genre + '\'' +
                 ", language='" + language + '\'' +
                 ", url='" + url + '\'' +
                 ", author=" + authors.toString() +
                 ", publisher=" + publisher +
-                ", edition=" + edition +
                 '}';
     }
 }

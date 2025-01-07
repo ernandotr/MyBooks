@@ -1,6 +1,5 @@
 package dev.ernandorezende.mybooks.entities;
 
-import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
