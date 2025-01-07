@@ -95,7 +95,7 @@ public class BookServiceTest {
     void getBookByIdSuccess() {
         Book book = buildExpectedBook();
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
-        BookResponse response = bookService.getById(1L);
+        BookResponse response = bookService.getBookById(1L);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(book.getTitle(), response.getTitle());
     }
@@ -103,7 +103,7 @@ public class BookServiceTest {
     @Test
     void getBookByIdFailureBookNotFound() {
         when(bookRepository.findById(anyLong())).thenReturn(Optional.empty());
-        Assertions.assertThrows(BookNotFoundException.class, () -> bookService.getById(2L));
+        Assertions.assertThrows(BookNotFoundException.class, () -> bookService.getBookById(2L));
 
     }
 

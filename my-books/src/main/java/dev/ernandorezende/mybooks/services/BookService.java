@@ -2,10 +2,8 @@ package dev.ernandorezende.mybooks.services;
 
 import dev.ernandorezende.mybooks.dtos.requests.BooksRequest;
 import dev.ernandorezende.mybooks.dtos.responses.BookResponse;
-import dev.ernandorezende.mybooks.entities.Author;
 import dev.ernandorezende.mybooks.entities.Book;
 import dev.ernandorezende.mybooks.entities.Publisher;
-import dev.ernandorezende.mybooks.exceptions.AuthorNotFoundException;
 import dev.ernandorezende.mybooks.exceptions.BookNotFoundException;
 import dev.ernandorezende.mybooks.exceptions.PublisherNotFoundException;
 import dev.ernandorezende.mybooks.repositories.AuthorRepository;
@@ -34,30 +32,19 @@ public class BookService {
     }
 
     public BookResponse create(BooksRequest booksRequest) {
-        Publisher publisher = publisherRepository.findById(booksRequest.getPublisher()).orElseThrow(PublisherNotFoundException::new);
-
         Book book = toEntity(booksRequest);
-        book.getAuthors().clear();
-        for(Long authorId : booksRequest.getAuthors()) {
-            var author = authorRepository.findById(authorId).orElseThrow(AuthorNotFoundException::new);
-            book.getAuthors().add(author);
-        }
-        book.setPublisher(publisher);
+        book.setAuthors(authorRepository.findAllById(booksRequest.getAuthors()));
+        book.setPublisher(getPublisher(booksRequest));
         book = bookRepository.save(book);
 
         return toResponse(book);
     }
 
     public void update(BooksRequest booksRequest, Long id) {
-            Publisher publisher = publisherRepository.findById(booksRequest.getPublisher()).orElseThrow(PublisherNotFoundException::new);
-            Book book = bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
         try {
-            book.getAuthors().clear();
-            for(Long authorId : booksRequest.getAuthors()) {
-                var author = authorRepository.findById(authorId).orElseThrow(AuthorNotFoundException::new);
-                book.getAuthors().add(author);
-            }
-            book.setPublisher(publisher);
+            Book book = getById(id);
+            book.setAuthors(authorRepository.findAllById(booksRequest.getAuthors()));
+            book.setPublisher(getPublisher(booksRequest));
             book.setTitle(booksRequest.getTitle());
             book.setIsbn(booksRequest.getIsbn());
             book.setGenre(booksRequest.getGenre());
@@ -71,13 +58,20 @@ public class BookService {
         }
     }
 
+    private Publisher getPublisher(BooksRequest booksRequest) {
+        return publisherRepository.findById(booksRequest.getPublisher()).orElseThrow(PublisherNotFoundException::new);
+    }
+
     public List<BookResponse> getAll() {
         return bookRepository.findAll().stream().map(this::toResponse).collect(Collectors.toList());
     }
 
-    public BookResponse getById(Long id) {
-        var book = bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
-        return toResponse(book);
+    public BookResponse getBookById(Long id) {
+        return toResponse(getById(id));
+    }
+
+    private Book getById(Long id) {
+        return bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
     }
 
     public void delete(Long id) {

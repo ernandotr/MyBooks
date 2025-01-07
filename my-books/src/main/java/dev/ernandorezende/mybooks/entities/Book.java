@@ -2,9 +2,7 @@ package dev.ernandorezende.mybooks.entities;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "books")
@@ -22,7 +20,12 @@ public class Book {
     private String edition;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Author> authors = new HashSet<>();
+    @JoinTable(
+            name = "books_authors",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    private List<Author> authors = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "publisher_id")
@@ -92,11 +95,11 @@ public class Book {
         this.edition = edition;
     }
 
-    public Set<Author> getAuthors() {
+    public List<Author> getAuthors() {
         return this.authors;
     }
 
-    public void setAuthors(Set<Author> authors) {
+    public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }
 
