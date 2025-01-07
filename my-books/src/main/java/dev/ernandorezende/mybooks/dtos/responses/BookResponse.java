@@ -1,15 +1,15 @@
 package dev.ernandorezende.mybooks.dtos.responses;
 
+import java.util.List;
+
 public class BookResponse {
     private Long id;
     private String title;
-    private String isbn;
     private String pages;
     private String genre;
     private String language;
     private String url;
-    private String edition;
-    private AuthorResponse author;
+    private List<AuthorSummaryResponse> authors;
     private PublisherResponse publisher;
 
     public Long getId() {
@@ -26,14 +26,6 @@ public class BookResponse {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
     }
 
     public String getPages() {
@@ -68,20 +60,12 @@ public class BookResponse {
         this.url = url;
     }
 
-    public String getEdition() {
-        return edition;
+    public List<AuthorSummaryResponse> getAuthors() {
+        return authors;
     }
 
-    public void setEdition(String edition) {
-        this.edition = edition;
-    }
-
-    public AuthorResponse getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(AuthorResponse author) {
-        this.author = author;
+    public void setAuthors(List<AuthorSummaryResponse> authors) {
+        this.authors = authors;
     }
 
     public PublisherResponse getPublisher() {
