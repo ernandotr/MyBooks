@@ -1,8 +1,9 @@
 package dev.ernandorezende.mybooks.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "books")
@@ -12,16 +13,19 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private String isbn;
     private String pages;
     private String genre;
     private String language;
     private String url;
-    private String edition;
 
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private Author author;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "books_authors",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    @JsonIgnoreProperties("books")
+    private List<Author> authors;
 
     @ManyToOne
     @JoinColumn(name = "publisher_id")
@@ -41,14 +45,6 @@ public class Book {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
     }
 
     public String getPages() {
@@ -83,20 +79,12 @@ public class Book {
         this.url = url;
     }
 
-    public String getEdition() {
-        return edition;
+    public List<Author> getAuthors() {
+        return this.authors;
     }
 
-    public void setEdition(String edition) {
-        this.edition = edition;
-    }
-
-    public Author getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
     }
 
     public Publisher getPublisher() {
@@ -123,14 +111,12 @@ public class Book {
         return "Book{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", isbn='" + isbn + '\'' +
                 ", pages='" + pages + '\'' +
                 ", genre='" + genre + '\'' +
                 ", language='" + language + '\'' +
                 ", url='" + url + '\'' +
-                ", author=" + author +
+                ", author=" + authors.toString() +
                 ", publisher=" + publisher +
-                ", edition=" + edition +
                 '}';
     }
 }

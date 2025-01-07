@@ -2,6 +2,7 @@ package dev.ernandorezende.mybooks.controllers;
 
 import dev.ernandorezende.mybooks.dtos.requests.AuthorRequest;
 import dev.ernandorezende.mybooks.dtos.responses.AuthorResponse;
+import dev.ernandorezende.mybooks.dtos.responses.AuthorSummaryResponse;
 import dev.ernandorezende.mybooks.entities.Author;
 import dev.ernandorezende.mybooks.exceptions.handlers.ErrorDetails;
 import dev.ernandorezende.mybooks.services.AuthorService;
@@ -39,7 +40,7 @@ public class AuthorController {
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @GetMapping(produces = {"application/json", "application/xml"})
-    public ResponseEntity<Page<Author>> getAllAuthors(Pageable pageable ) {
+    public ResponseEntity<Page<AuthorSummaryResponse>> getAllAuthors(Pageable pageable ) {
         return ResponseEntity.ok(authorService.getAll(pageable));
     }
 
