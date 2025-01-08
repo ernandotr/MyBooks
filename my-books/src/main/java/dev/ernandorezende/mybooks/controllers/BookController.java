@@ -6,6 +6,8 @@ import dev.ernandorezende.mybooks.dtos.responses.BookSummaryResponse;
 import dev.ernandorezende.mybooks.exceptions.handlers.ErrorDetails;
 import dev.ernandorezende.mybooks.services.BookService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -53,6 +55,16 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.getAll(pageable));
     }
 
+    @Operation(summary = "Get book by ID",
+            parameters = {@Parameter(in = ParameterIn.PATH, name = "id", description = "Book Id")},
+            description = "Retrieve a single book with its detailed information.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation."),
+            @ApiResponse(responseCode = "404", description = "Resource not found.",
+                    content = { @Content(schema = @Schema(implementation = ErrorDetails.class))}),
+            @ApiResponse(responseCode = "500", description = "Internal errors.",
+                    content = { @Content(schema = @Schema(implementation = ErrorDetails.class))})
+    })
     @GetMapping("/{id}")
     public ResponseEntity<BookResponse> getBookById(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.getBookById(id));
