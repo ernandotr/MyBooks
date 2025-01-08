@@ -78,7 +78,7 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal server errors",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @PutMapping(value = "/{id}", consumes = {"application/json", "application/xml"})
+    @PutMapping(value = "/{id}", consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
     public ResponseEntity<Void> updateBook(@PathVariable("id") Long id, @RequestBody BooksRequest booksRequest) {
         bookService.update(booksRequest, id);
         return ResponseEntity.noContent().build();
@@ -94,7 +94,7 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal server errors",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBook(@PathVariable("id") Long id) {
         bookService.delete(id);
