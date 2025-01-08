@@ -4,6 +4,8 @@ import dev.ernandorezende.mybooks.dtos.requests.BooksRequest;
 import dev.ernandorezende.mybooks.dtos.responses.BookResponse;
 import dev.ernandorezende.mybooks.dtos.responses.BookSummaryResponse;
 import dev.ernandorezende.mybooks.services.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +27,8 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookSummaryResponse>> getAllBooks() {
-        return ResponseEntity.status(HttpStatus.OK).body(bookService.getAll());
+    public ResponseEntity<Page<BookSummaryResponse>> getAllBooks(Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.getAll(pageable));
     }
 
     @GetMapping("/{id}")
