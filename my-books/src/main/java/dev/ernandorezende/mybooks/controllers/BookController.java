@@ -61,7 +61,7 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal errors.",
                     content = { @Content(schema = @Schema(implementation = ErrorDetails.class))})
     })
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = {"application/json", "application/xml"})
     public ResponseEntity<BookResponse> getBookById(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.getBookById(id));
     }
