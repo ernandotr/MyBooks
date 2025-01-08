@@ -3,6 +3,7 @@ package dev.ernandorezende.mybooks.controllers;
 import dev.ernandorezende.mybooks.dtos.requests.BooksRequest;
 import dev.ernandorezende.mybooks.dtos.responses.BookResponse;
 import dev.ernandorezende.mybooks.dtos.responses.BookSummaryResponse;
+import dev.ernandorezende.mybooks.exceptions.handlers.ErrorDetails;
 import dev.ernandorezende.mybooks.services.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,9 +34,9 @@ public class BookController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Successful operation."),
             @ApiResponse(responseCode = "500", description = "Internal errors.",
-                    content = { @Content(schema = @Schema(implementation = ErrorResponse.class))})
+                    content = { @Content(schema = @Schema(implementation = ErrorDetails.class))})
     })
-    @PostMapping
+    @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
     public ResponseEntity<BookResponse> createBook(@RequestBody BooksRequest booksRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(booksRequest));
     }
