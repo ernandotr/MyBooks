@@ -38,7 +38,7 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal errors.",
                     content = { @Content(schema = @Schema(implementation = ErrorDetails.class))})
     })
-    @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
+    @PostMapping
     public ResponseEntity<BookResponse> createBook(@RequestBody BooksRequest booksRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(booksRequest));
     }
@@ -88,6 +88,16 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(
+            summary = "Delete a book",
+            parameters = {@Parameter(in = ParameterIn.PATH, name = "id", required = true, description = "Book Id")},
+            description = "Allows the user delete a book by Id"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successful operation"),
+            @ApiResponse(responseCode = "500", description = "Internal server errors",
+                    content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
+    })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBook(@PathVariable("id") Long id) {
