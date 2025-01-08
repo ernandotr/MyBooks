@@ -78,7 +78,7 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal server errors",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = {"application/json", "application/xml"})
     public ResponseEntity<Void> updateBook(@PathVariable("id") Long id, @RequestBody BooksRequest booksRequest) {
         bookService.update(booksRequest, id);
         return ResponseEntity.noContent().build();
