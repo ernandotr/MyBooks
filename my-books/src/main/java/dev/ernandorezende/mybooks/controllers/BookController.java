@@ -35,11 +35,10 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal errors.",
                     content = { @Content(schema = @Schema(implementation = ErrorDetails.class))})
     })
-    @PostMapping
+    @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
     public ResponseEntity<BookResponse> createBook(@RequestBody BooksRequest booksRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(booksRequest));
     }
-
 
     @Operation(summary = "Get all books", description = "Retrieve a collection of books allowing pagination and sort.")
     @ApiResponses(value = {
@@ -47,7 +46,7 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal errors.",
                     content = { @Content(schema = @Schema(implementation = ErrorDetails.class))})
     })
-    @GetMapping
+    @GetMapping(produces = {"application/json", "application/xml"})
     public ResponseEntity<Page<BookSummaryResponse>> getAllBooks(Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.getAll(pageable));
     }
@@ -62,7 +61,7 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal errors.",
                     content = { @Content(schema = @Schema(implementation = ErrorDetails.class))})
     })
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = {"application/json", "application/xml"})
     public ResponseEntity<BookResponse> getBookById(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.getBookById(id));
     }
@@ -79,7 +78,7 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal server errors",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
     public ResponseEntity<Void> updateBook(@PathVariable("id") Long id, @RequestBody BooksRequest booksRequest) {
         bookService.update(booksRequest, id);
         return ResponseEntity.noContent().build();
@@ -95,7 +94,7 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal server errors",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBook(@PathVariable("id") Long id) {
         bookService.delete(id);
