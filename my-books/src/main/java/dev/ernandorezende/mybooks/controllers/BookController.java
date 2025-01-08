@@ -70,6 +70,18 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.getBookById(id));
     }
 
+    @Operation(
+            summary = "Update a book",
+            parameters = {@Parameter(in = ParameterIn.PATH, name = "id", required = true, description = "Book Id")},
+            description = "Allows to update a book information."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successful operation"),
+            @ApiResponse(responseCode = "404", description = "Resource not found",
+                    content = @Content(schema = @Schema(implementation = ErrorDetails.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server errors",
+                    content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
+    })
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateBook(@PathVariable("id") Long id, @RequestBody BooksRequest booksRequest) {
         bookService.update(booksRequest, id);
