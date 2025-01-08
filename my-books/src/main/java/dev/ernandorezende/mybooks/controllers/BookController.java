@@ -35,7 +35,7 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal errors.",
                     content = { @Content(schema = @Schema(implementation = ErrorDetails.class))})
     })
-    @PostMapping
+    @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
     public ResponseEntity<BookResponse> createBook(@RequestBody BooksRequest booksRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(booksRequest));
     }
