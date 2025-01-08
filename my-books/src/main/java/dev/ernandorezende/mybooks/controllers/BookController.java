@@ -40,14 +40,13 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(booksRequest));
     }
 
-
     @Operation(summary = "Get all books", description = "Retrieve a collection of books allowing pagination and sort.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation."),
             @ApiResponse(responseCode = "500", description = "Internal errors.",
                     content = { @Content(schema = @Schema(implementation = ErrorDetails.class))})
     })
-    @GetMapping
+    @GetMapping(produces = {"application/json", "application/xml"})
     public ResponseEntity<Page<BookSummaryResponse>> getAllBooks(Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.getAll(pageable));
     }
