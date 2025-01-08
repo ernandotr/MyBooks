@@ -12,9 +12,11 @@ import dev.ernandorezende.mybooks.repositories.AuthorRepository;
 import dev.ernandorezende.mybooks.repositories.BookRepository;
 import dev.ernandorezende.mybooks.repositories.PublisherRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,8 +64,10 @@ public class BookService {
         return publisherRepository.findById(booksRequest.getPublisher()).orElseThrow(PublisherNotFoundException::new);
     }
 
-    public List<BookSummaryResponse> getAll() {
-        return bookRepository.findAll().stream().map(this::toSummaryResponse).collect(Collectors.toList());
+    public Page<BookSummaryResponse> getAll(Pageable pageable) {
+        Page<Book> booksPage = bookRepository.findAll(pageable);
+        var books = booksPage.getContent().stream().map(this::toSummaryResponse).toList();
+        return new PageImpl<>(books, pageable, booksPage.getTotalElements());
     }
 
     public BookResponse getBookById(Long id) {
@@ -84,7 +88,9 @@ public class BookService {
 
     private BookSummaryResponse toSummaryResponse(Book book) {
         var response = modelMapper.map(book, BookSummaryResponse.class);
-        response.setAuthor(book.getAuthors().stream().map(Author::getName).collect(Collectors.joining(", ")));
+        response.setAuthor(book.getAuthors().stream()
+                .map(Author::getName)
+                .collect(Collectors.joining(", ")));
         return response;
     }
 

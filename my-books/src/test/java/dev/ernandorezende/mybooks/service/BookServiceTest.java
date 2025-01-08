@@ -21,6 +21,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -85,11 +87,12 @@ public class BookServiceTest {
     void getAllBooks() {
         Book book = buildExpectedBook();
         when(bookRepository.findAll()).thenReturn(List.of(book));
-        List<BookSummaryResponse> response = bookService.getAll();
+
+        Page<BookSummaryResponse> response = bookService.getAll(PageRequest.of(0,10));
 
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(1, response.size());
-        Assertions.assertEquals(book.getTitle(), response.getFirst().getTitle());
+        Assertions.assertEquals(1, response.getTotalElements());
+        Assertions.assertEquals(book.getTitle(), response.getContent().getFirst().getTitle());
     }
 
     @Test
