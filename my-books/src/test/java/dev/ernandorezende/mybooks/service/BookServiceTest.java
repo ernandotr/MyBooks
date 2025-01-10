@@ -22,7 +22,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class BookServiceTest {
+class BookServiceTest {
 
     @Spy
     ModelMapper modelMapper;
@@ -54,8 +55,9 @@ public class BookServiceTest {
         Book book = buildExpectedBook();
         Author author = buildAuthor();
         Publisher publisher = buildPublisher();
+        book.setAuthors(List.of(author));
+        book.setPublisher(publisher);
 
-        when(authorRepository.findById(anyLong())).thenReturn(Optional.of(author));
         when(publisherRepository.findById(anyLong())).thenReturn(Optional.of(publisher));
         when(bookRepository.save(any(Book.class))).thenReturn(book);
         BookResponse response = bookService.create(booksRequest);
@@ -68,7 +70,7 @@ public class BookServiceTest {
         BooksRequest booksRequest = new BooksRequest();
         booksRequest.setTitle("Title");
 
-        when(authorRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(authorRepository.findAllById(anyList())).thenThrow(AuthorNotFoundException.class);
         Assertions.assertThrows(AuthorNotFoundException.class, () -> bookService.create(booksRequest));
     }
 
@@ -77,8 +79,6 @@ public class BookServiceTest {
         BooksRequest booksRequest = new BooksRequest();
         booksRequest.setTitle("Title");
 
-        Author author = buildAuthor();
-        when(authorRepository.findById(anyLong())).thenReturn(Optional.of(author));
         when(publisherRepository.findById(anyLong())).thenReturn(Optional.empty());
         Assertions.assertThrows(PublisherNotFoundException.class, () -> bookService.create(booksRequest));
     }
@@ -86,9 +86,9 @@ public class BookServiceTest {
     @Test
     void getAllBooks() {
         Book book = buildExpectedBook();
-        when(bookRepository.findAll()).thenReturn(List.of(book));
+        when(bookRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(book), Pageable.unpaged(), 1L));
 
-        Page<BookSummaryResponse> response = bookService.getAll(PageRequest.of(0,10));
+        Page<BookSummaryResponse> response = bookService.getAll(Pageable.unpaged());
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(1, response.getTotalElements());
@@ -115,12 +115,11 @@ public class BookServiceTest {
     void updateBookSuccess() {
         BooksRequest booksRequest = new BooksRequest();
         booksRequest.setTitle("Title");
+        booksRequest.setAuthors(List.of(1L, 2L));
 
         Book book = buildExpectedBook();
-        Author author = buildAuthor();
         Publisher publisher = buildPublisher();
 
-        when(authorRepository.findById(anyLong())).thenReturn(Optional.of(author));
         when(publisherRepository.findById(anyLong())).thenReturn(Optional.of(publisher));
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
         when(bookRepository.save(any(Book.class))).thenReturn(book);
@@ -131,21 +130,22 @@ public class BookServiceTest {
     }
 
     @Test
-    void updateBookFailureAuthorNotFound() {
+    void updateBookFailureWithoutAuthor() {
         BooksRequest booksRequest = new BooksRequest();
         booksRequest.setTitle("Title");
 
-        when(authorRepository.findById(anyLong())).thenReturn(Optional.empty());
-        Assertions.assertThrows(AuthorNotFoundException.class, () -> bookService.update(booksRequest, 1L));
+        Assertions.assertThrows(RuntimeException.class, () -> bookService.update(booksRequest, 1L));
     }
 
     @Test
     void updateBookFailurePublisherNotFound() {
         BooksRequest booksRequest = new BooksRequest();
         booksRequest.setTitle("Title2");
+        booksRequest.setAuthors(List.of(1L));
 
         Author author = buildAuthor();
-        when(authorRepository.findById(anyLong())).thenReturn(Optional.of(author));
+        when(bookRepository.findById(anyLong())).thenReturn(Optional.of(new Book()));
+        when(authorRepository.findAllById(anyList())).thenReturn(List.of(author));
         when(publisherRepository.findById(anyLong())).thenReturn(Optional.empty());
         Assertions.assertThrows(PublisherNotFoundException.class, () -> bookService.update(booksRequest, 2L));
     }
@@ -154,12 +154,8 @@ public class BookServiceTest {
     void updateBookFailureBookNotFound() {
         BooksRequest booksRequest = new BooksRequest();
         booksRequest.setTitle("Title");
+        booksRequest.setAuthors(List.of(1L));
 
-        Author author = buildAuthor();
-        Publisher publisher = buildPublisher();
-
-        when(authorRepository.findById(anyLong())).thenReturn(Optional.of(author));
-        when(publisherRepository.findById(anyLong())).thenReturn(Optional.of(publisher));
         when(bookRepository.findById(anyLong())).thenReturn(Optional.empty());
         Assertions.assertThrows(BookNotFoundException.class, () -> bookService.update(booksRequest, 1L));
     }
@@ -177,6 +173,7 @@ public class BookServiceTest {
         Book book = new Book();
         book.setId(1L);
         book.setTitle("Title1");
+        book.setAuthors(List.of(buildAuthor()));
         return book;
     }
 

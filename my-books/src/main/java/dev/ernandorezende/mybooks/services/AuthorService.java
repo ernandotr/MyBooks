@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,7 +42,9 @@ public class AuthorService {
 
     private AuthorResponse toResponse(Author author) {
         AuthorResponse response = modelMapper.map(author, AuthorResponse.class);
-        response.setBooks(author.getBooks().stream().map(Book::getTitle).collect(Collectors.joining()));
+        Optional.of(author.getBooks()).ifPresent(books -> {
+            response.setBooks(books.stream().map(Book::getTitle).collect(Collectors.joining()));
+        });
         return response;
     }
 

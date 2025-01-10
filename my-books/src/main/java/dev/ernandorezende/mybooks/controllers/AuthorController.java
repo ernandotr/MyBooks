@@ -3,7 +3,6 @@ package dev.ernandorezende.mybooks.controllers;
 import dev.ernandorezende.mybooks.dtos.requests.AuthorRequest;
 import dev.ernandorezende.mybooks.dtos.responses.AuthorResponse;
 import dev.ernandorezende.mybooks.dtos.responses.AuthorSummaryResponse;
-import dev.ernandorezende.mybooks.entities.Author;
 import dev.ernandorezende.mybooks.exceptions.handlers.ErrorDetails;
 import dev.ernandorezende.mybooks.services.AuthorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -71,7 +71,7 @@ public class AuthorController {
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
-    public ResponseEntity<AuthorResponse> saveAuthor(@RequestBody AuthorRequest author) {
+    public ResponseEntity<AuthorResponse> saveAuthor(@Valid @RequestBody AuthorRequest author) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authorService.save(author));
     }
 
@@ -88,7 +88,7 @@ public class AuthorController {
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @PutMapping(value = "/{id}", consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
-    public ResponseEntity<Void> updateAuthor(@PathVariable Long id, @RequestBody AuthorRequest author) {
+    public ResponseEntity<Void> updateAuthor(@PathVariable Long id, @Valid @RequestBody AuthorRequest author) {
         authorService.update(author, id);
         return ResponseEntity.noContent().build();
     }
