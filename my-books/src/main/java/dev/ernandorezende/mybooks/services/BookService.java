@@ -45,19 +45,18 @@ public class BookService {
     }
 
     public void update(BooksRequest booksRequest, Long id) {
-        try {
-            Book book = getById(id);
-            book.setAuthors(authorRepository.findAllById(booksRequest.getAuthors()));
-            book.setPublisher(getPublisher(booksRequest));
-            book.setTitle(booksRequest.getTitle());
-            book.setGenre(booksRequest.getGenre());
-            book.setLanguage(booksRequest.getLanguage());
-            book.setPages(booksRequest.getPages());
-            book.setUrl(booksRequest.getUrl());
-            bookRepository.save(book);
-        } catch (Exception e) {
-            throw new RuntimeException("Could not update book", e);
+        if(booksRequest.getAuthors() == null || booksRequest.getAuthors().isEmpty()) {
+            throw new RuntimeException("Authors cannot be empty");
         }
+        Book book = getById(id);
+        book.setAuthors(authorRepository.findAllById(booksRequest.getAuthors()));
+        book.setPublisher(getPublisher(booksRequest));
+        book.setTitle(booksRequest.getTitle());
+        book.setGenre(booksRequest.getGenre());
+        book.setLanguage(booksRequest.getLanguage());
+        book.setPages(booksRequest.getPages());
+        book.setUrl(booksRequest.getUrl());
+        bookRepository.save(book);
     }
 
     private Publisher getPublisher(BooksRequest booksRequest) {
