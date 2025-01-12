@@ -1,15 +1,32 @@
 package dev.ernandorezende.mybooks.dtos.requests;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import org.hibernate.validator.constraints.URL;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class BooksRequest {
+    @NotBlank(message = "The 'title' field is mandatory.")
     private String title;
+
+    @NotBlank(message = "The 'page' field is mandatory.")
     private String pages;
+
+    @NotNull(message = "The 'genre' field is mandatory.")
     private String genre;
+
     private String language;
+
+    @NotBlank(message = "The 'url' field is mandatory.")
+    @URL
     private String url;
-    private long publisher;
+
+    @NotNull(message = "The 'publisher' field is mandatory.")
+    private Long publisher;
+
+    @NotEmpty(message = "At least one Author is required.")
     private List<Long> authors = new ArrayList<>();
 
     public String getTitle() {
