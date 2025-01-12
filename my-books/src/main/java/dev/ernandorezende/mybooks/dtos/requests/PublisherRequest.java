@@ -1,4 +1,8 @@
 package dev.ernandorezende.mybooks.dtos.requests;
 
-public record PublisherRequest(String name) {
+import jakarta.validation.constraints.NotBlank;
+
+public record PublisherRequest(
+        @NotBlank(message = "Publisher's name is required.")
+        String name) {
 }

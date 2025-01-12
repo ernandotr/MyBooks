@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -70,7 +71,7 @@ public class PublisherController {
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
-    public ResponseEntity<PublisherResponse> createPublisher(@RequestBody PublisherRequest publisher) {
+    public ResponseEntity<PublisherResponse> createPublisher(@Valid @RequestBody PublisherRequest publisher) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.publisherService.create(publisher));
     }
 
@@ -88,7 +89,7 @@ public class PublisherController {
     })
     @PutMapping(value = "/{id}",
             consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
-    public ResponseEntity<Void> updatePublisher(@PathVariable Long id, @RequestBody PublisherRequest publisher) {
+    public ResponseEntity<Void> updatePublisher(@PathVariable Long id, @Valid @RequestBody PublisherRequest publisher) {
         this.publisherService.update(publisher, id);
         return ResponseEntity.noContent().build();
     }

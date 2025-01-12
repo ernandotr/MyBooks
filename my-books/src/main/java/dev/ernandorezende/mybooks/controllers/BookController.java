@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class BookController {
                     content = { @Content(schema = @Schema(implementation = ErrorDetails.class))})
     })
     @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
-    public ResponseEntity<BookResponse> createBook(@RequestBody BooksRequest booksRequest) {
+    public ResponseEntity<BookResponse> createBook(@Valid @RequestBody BooksRequest booksRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(booksRequest));
     }
 
@@ -79,7 +80,7 @@ public class BookController {
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @PutMapping(value = "/{id}", consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
-    public ResponseEntity<Void> updateBook(@PathVariable("id") Long id, @RequestBody BooksRequest booksRequest) {
+    public ResponseEntity<Void> updateBook(@PathVariable("id") Long id, @Valid @RequestBody BooksRequest booksRequest) {
         bookService.update(booksRequest, id);
         return ResponseEntity.noContent().build();
     }
