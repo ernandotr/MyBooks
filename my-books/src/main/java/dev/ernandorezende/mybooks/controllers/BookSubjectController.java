@@ -3,12 +3,15 @@ package dev.ernandorezende.mybooks.controllers;
 import dev.ernandorezende.mybooks.dtos.requests.BookSubjectRequest;
 import dev.ernandorezende.mybooks.dtos.responses.BookSubjectResponse;
 import dev.ernandorezende.mybooks.services.BookSubjectService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Book subjects", description = "It allows managing to Book Subjects operations.")
 @RestController
 @RequestMapping("api/book-subjects")
 public class BookSubjectController {
@@ -18,6 +21,10 @@ public class BookSubjectController {
         this.bookSubjectService = bookSubjectService;
     }
 
+    @Operation(
+            summary = "List Book Subjects",
+            description = "It allows listing all Book subjects with pagination and sort."
+    )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Page<BookSubjectResponse> getBookSubjects(Pageable pageable) {
