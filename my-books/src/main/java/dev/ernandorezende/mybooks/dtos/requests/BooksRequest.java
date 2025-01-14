@@ -1,6 +1,5 @@
 package dev.ernandorezende.mybooks.dtos.requests;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.URL;
 
@@ -15,7 +14,7 @@ public class BooksRequest {
     private String pages;
 
     @NotNull(message = "The 'genre' field is mandatory.")
-    private String genre;
+    private Long subject;
 
     private String language;
 
@@ -45,12 +44,12 @@ public class BooksRequest {
         this.pages = pages;
     }
 
-    public String getGenre() {
-        return genre;
+    public Long getSubject() {
+        return subject;
     }
 
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setSubject(Long subject) {
+        this.subject = subject;
     }
 
     public String getLanguage() {

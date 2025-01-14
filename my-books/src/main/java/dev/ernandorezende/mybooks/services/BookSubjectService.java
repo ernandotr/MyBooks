@@ -5,6 +5,7 @@ import dev.ernandorezende.mybooks.dtos.responses.BookSubjectResponse;
 import dev.ernandorezende.mybooks.entities.BookSubject;
 import dev.ernandorezende.mybooks.exceptions.handlers.BookSubjectNotFoundException;
 import dev.ernandorezende.mybooks.repositories.BookSubjectRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +16,10 @@ import java.util.List;
 @Service
 public class BookSubjectService {
     private final BookSubjectRepository bookSubjectRepository;
-    public BookSubjectService(BookSubjectRepository bookSubjectRepository) {
+    private final ModelMapper modelMapper;
+    public BookSubjectService(BookSubjectRepository bookSubjectRepository, ModelMapper modelMapper) {
         this.bookSubjectRepository = bookSubjectRepository;
+        this.modelMapper = modelMapper;
     }
 
     public Page<BookSubjectResponse> findAll(Pageable pageable) {
@@ -51,7 +54,7 @@ public class BookSubjectService {
     }
 
     private BookSubjectResponse toResponse(BookSubject bookSubject) {
-        return new BookSubjectResponse(bookSubject.getId(), bookSubject.getSubject());
+        return modelMapper.map(bookSubject, BookSubjectResponse.class);
     }
 
 }
