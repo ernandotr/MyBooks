@@ -11,6 +11,7 @@ public class BookResponse {
     private String url;
     private List<AuthorSummaryResponse> authors;
     private PublisherResponse publisher;
+    private BookSubjectResponse subject;
 
     public Long getId() {
         return id;
@@ -74,5 +75,13 @@ public class BookResponse {
 
     public void setPublisher(PublisherResponse publisher) {
         this.publisher = publisher;
+    }
+
+    public BookSubjectResponse getSubject() {
+        return subject;
+    }
+
+    public void setSubject(BookSubjectResponse subject) {
+        this.subject = subject;
     }
 }

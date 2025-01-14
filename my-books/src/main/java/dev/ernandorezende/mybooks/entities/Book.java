@@ -14,9 +14,11 @@ public class Book {
     private Long id;
     private String title;
     private String pages;
-    private String genre;
     private String language;
     private String url;
+    @ManyToOne
+    @JoinColumn(name = "subject_id")
+    private BookSubject subject;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -55,12 +57,12 @@ public class Book {
         this.pages = pages;
     }
 
-    public String getGenre() {
-        return genre;
+    public BookSubject getSubject() {
+        return subject;
     }
 
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setSubject(BookSubject subject) {
+        this.subject = subject;
     }
 
     public String getLanguage() {
@@ -112,7 +114,7 @@ public class Book {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", pages='" + pages + '\'' +
-                ", genre='" + genre + '\'' +
+                ", subject='" + subject + '\'' +
                 ", language='" + language + '\'' +
                 ", url='" + url + '\'' +
                 ", author=" + authors.toString() +

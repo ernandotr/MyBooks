@@ -5,11 +5,14 @@ import dev.ernandorezende.mybooks.dtos.responses.BookResponse;
 import dev.ernandorezende.mybooks.dtos.responses.BookSummaryResponse;
 import dev.ernandorezende.mybooks.entities.Author;
 import dev.ernandorezende.mybooks.entities.Book;
+import dev.ernandorezende.mybooks.entities.BookSubject;
 import dev.ernandorezende.mybooks.entities.Publisher;
 import dev.ernandorezende.mybooks.exceptions.BookNotFoundException;
 import dev.ernandorezende.mybooks.exceptions.PublisherNotFoundException;
+import dev.ernandorezende.mybooks.exceptions.handlers.BookSubjectNotFoundException;
 import dev.ernandorezende.mybooks.repositories.AuthorRepository;
 import dev.ernandorezende.mybooks.repositories.BookRepository;
+import dev.ernandorezende.mybooks.repositories.BookSubjectRepository;
 import dev.ernandorezende.mybooks.repositories.PublisherRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -25,14 +28,16 @@ public class BookService {
     private final AuthorRepository authorRepository;
     private  final PublisherRepository publisherRepository;
     private final BookRepository bookRepository;
+    private final BookSubjectRepository bookSubjectRepository;
     private final ModelMapper modelMapper;
 
     public BookService(BookRepository bookRepository, ModelMapper modelMapper,
-                       AuthorRepository authorRepository, PublisherRepository publisherRepository) {
+                       AuthorRepository authorRepository, PublisherRepository publisherRepository, BookSubjectRepository bookSubjectRepository) {
         this.bookRepository = bookRepository;
         this.modelMapper = modelMapper;
         this.authorRepository = authorRepository;
         this.publisherRepository = publisherRepository;
+        this.bookSubjectRepository = bookSubjectRepository;
     }
 
     public BookResponse create(BooksRequest booksRequest) {
@@ -52,15 +57,21 @@ public class BookService {
         book.setAuthors(authorRepository.findAllById(booksRequest.getAuthors()));
         book.setPublisher(getPublisher(booksRequest));
         book.setTitle(booksRequest.getTitle());
-        book.setGenre(booksRequest.getGenre());
+        book.setSubject(getSubject(booksRequest));
         book.setLanguage(booksRequest.getLanguage());
         book.setPages(booksRequest.getPages());
         book.setUrl(booksRequest.getUrl());
         bookRepository.save(book);
     }
 
+    private BookSubject getSubject(BooksRequest booksRequest) {
+        return bookSubjectRepository.findById(booksRequest.getSubject())
+                .orElseThrow(BookSubjectNotFoundException::new);
+    }
+
     private Publisher getPublisher(BooksRequest booksRequest) {
-        return publisherRepository.findById(booksRequest.getPublisher()).orElseThrow(PublisherNotFoundException::new);
+        return publisherRepository.findById(booksRequest.getPublisher())
+                .orElseThrow(PublisherNotFoundException::new);
     }
 
     public Page<BookSummaryResponse> getAll(Pageable pageable) {
