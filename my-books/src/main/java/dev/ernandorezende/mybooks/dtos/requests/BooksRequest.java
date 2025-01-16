@@ -13,7 +13,7 @@ public class BooksRequest {
     @NotBlank(message = "The 'page' field is mandatory.")
     private String pages;
 
-    @NotNull(message = "The 'genre' field is mandatory.")
+    @NotNull(message = "The 'subject' field is mandatory.")
     private Long subject;
 
     private String language;
