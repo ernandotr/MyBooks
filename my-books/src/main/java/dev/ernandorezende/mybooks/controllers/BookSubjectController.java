@@ -35,7 +35,7 @@ public class BookSubjectController {
             @ApiResponse(responseCode = "500", description = "Internal server errors.",
                     content = { @Content(schema = @Schema(implementation = ErrorDetails.class))})
     })
-    @GetMapping
+    @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public Page<BookSubjectResponse> getBookSubjects(Pageable pageable) {
         return bookSubjectService.findAll(pageable);
@@ -50,7 +50,7 @@ public class BookSubjectController {
             @ApiResponse(responseCode = "404", description = "Error if the resource not found."),
             @ApiResponse(responseCode = "500", description = "Internal server errors")
     })
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public BookSubjectResponse getBookSubject(@PathVariable("id") Long id) {
         return bookSubjectService.findById(id);
@@ -65,7 +65,7 @@ public class BookSubjectController {
             @ApiResponse(responseCode = "400", description = "Errors validating input fields."),
             @ApiResponse(responseCode = "500", description = "Internal server errors.")
     })
-    @PostMapping
+    @PostMapping(produces = "application/json", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public BookSubjectResponse createBookSubject(@Valid @RequestBody BookSubjectRequest bookSubjectRequest) {
         return bookSubjectService.save(bookSubjectRequest);
@@ -81,7 +81,7 @@ public class BookSubjectController {
             @ApiResponse(responseCode = "404", description = "Error if the resource not found."),
             @ApiResponse(responseCode = "500", description = "Internal server errors.")
     })
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateBookSubject(@PathVariable("id") Long id, @Valid @RequestBody BookSubjectRequest bookSubjectRequest) {
         bookSubjectService.update(bookSubjectRequest, id);
@@ -95,7 +95,7 @@ public class BookSubjectController {
             @ApiResponse(responseCode = "204", description = "Successful operation."),
             @ApiResponse(responseCode = "500", description = "Internal server errors.")
     })
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", produces = "application/json")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBookSubject(@PathVariable("id") Long id) {
         bookSubjectService.delete(id);
