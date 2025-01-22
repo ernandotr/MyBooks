@@ -22,8 +22,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -69,5 +68,23 @@ public class AuthorControllerIntegrationTest {
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.books").doesNotExist());
     }
+
+    @Test
+    void editAuthorSuccess() throws Exception {
+        AuthorRequest request = new AuthorRequest("Simon Sinek");
+
+        mvc.perform(put("/api/authors/{id}", 1)
+                        .content(mapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteAuthorSuccess() throws Exception {
+        mvc.perform(delete("/api/authors/{id}", 1))
+                .andExpect(status().isNoContent());
+    }
+
+
 
 }
