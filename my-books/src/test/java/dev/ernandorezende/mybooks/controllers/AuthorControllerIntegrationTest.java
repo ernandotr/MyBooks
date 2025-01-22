@@ -73,9 +73,18 @@ public class AuthorControllerIntegrationTest {
     void editAuthorSuccess() throws Exception {
         AuthorRequest request = new AuthorRequest("Simon Sinek");
 
-        mvc.perform(put("/api/authors/{id}", 1).content(mapper.writeValueAsString(request))
+        mvc.perform(put("/api/authors/{id}", 1)
+                        .content(mapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    void deleteAuthorSuccess() throws Exception {
+        mvc.perform(delete("/api/authors/{id}", 1))
+                .andExpect(status().isNoContent());
+    }
+
+
 
 }
