@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -85,6 +86,17 @@ public class AuthorControllerIntegrationTest {
                 .andExpect(status().isNoContent());
     }
 
+    @Test
+    void getByIdSuccess() throws Exception {
+        AuthorResponse response = new AuthorResponse();
+        response.setName("Simon Sinek");
+        response.setId(1L);
+        given(authorService.getById(anyLong())).willReturn(response);
+        mvc.perform(get("/api/authors/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").exists());
+
+    }
 
 
 }
