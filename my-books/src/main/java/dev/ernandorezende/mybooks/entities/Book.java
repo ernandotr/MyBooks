@@ -20,14 +20,14 @@ public class Book {
     @JoinColumn(name = "subject_id")
     private BookSubject subject;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "books_authors",
             joinColumns = @JoinColumn(name = "author_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
     @JsonIgnoreProperties("books")
-    private List<Author> authors;
+    private Set<Author> authors;
 
     @ManyToOne
     @JoinColumn(name = "publisher_id")
@@ -81,11 +81,11 @@ public class Book {
         this.url = url;
     }
 
-    public List<Author> getAuthors() {
+    public Set<Author> getAuthors() {
         return this.authors;
     }
 
-    public void setAuthors(List<Author> authors) {
+    public void setAuthors(Set<Author> authors) {
         this.authors = authors;
     }
 
