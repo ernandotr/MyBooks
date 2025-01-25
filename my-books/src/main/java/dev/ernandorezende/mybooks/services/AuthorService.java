@@ -42,9 +42,10 @@ public class AuthorService {
 
     private AuthorResponse toResponse(Author author) {
         AuthorResponse response = modelMapper.map(author, AuthorResponse.class);
-        Optional.of(author.getBooks()).ifPresent(books -> {
-            response.setBooks(books.stream().map(Book::getTitle).collect(Collectors.joining()));
-        });
+        Optional.of(author.getBooks()).ifPresent(books ->
+                response.setBooks(books.stream()
+                        .map(Book::getTitle)
+                        .collect(Collectors.joining())));
         return response;
     }
 

@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,7 +43,7 @@ public class BookService {
 
     public BookResponse create(BooksRequest booksRequest) {
         Book book = toEntity(booksRequest);
-        book.setAuthors(authorRepository.findAllById(booksRequest.getAuthors()));
+        book.setAuthors(new HashSet<>(authorRepository.findAllById(booksRequest.getAuthors())));
         book.setPublisher(getPublisher(booksRequest));
         book = bookRepository.save(book);
 
@@ -54,7 +55,7 @@ public class BookService {
             throw new RuntimeException("Authors cannot be empty");
         }
         Book book = getById(id);
-        book.setAuthors(authorRepository.findAllById(booksRequest.getAuthors()));
+        book.setAuthors(new HashSet<>(authorRepository.findAllById(booksRequest.getAuthors())));
         book.setPublisher(getPublisher(booksRequest));
         book.setTitle(booksRequest.getTitle());
         book.setSubject(getSubject(booksRequest));
