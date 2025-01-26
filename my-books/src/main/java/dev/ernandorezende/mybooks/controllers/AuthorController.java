@@ -71,7 +71,7 @@ public class AuthorController {
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
-    public ResponseEntity<AuthorResponse> saveAuthor(@Valid @RequestBody AuthorRequest author) {
+    public ResponseEntity<AuthorSummaryResponse> saveAuthor(@Valid @RequestBody AuthorRequest author) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authorService.save(author));
     }
 

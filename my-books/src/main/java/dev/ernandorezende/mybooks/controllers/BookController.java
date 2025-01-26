@@ -37,7 +37,7 @@ public class BookController {
                     content = { @Content(schema = @Schema(implementation = ErrorDetails.class))})
     })
     @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
-    public ResponseEntity<BookResponse> createBook(@Valid @RequestBody BooksRequest booksRequest) {
+    public ResponseEntity<BookSummaryResponse> createBook(@Valid @RequestBody BooksRequest booksRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(booksRequest));
     }
 

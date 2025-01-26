@@ -49,9 +49,10 @@ public class AuthorService {
         return response;
     }
 
-    public AuthorResponse save(AuthorRequest authorRequest) {
+    public AuthorSummaryResponse save(AuthorRequest authorRequest) {
         var author = new Author(authorRequest.name());
-        return toResponse(authorRepository.save(author));
+        author = authorRepository.save(author);
+        return toSummaryResponse(author);
     }
 
     public void update(AuthorRequest authorReq, Long id) {

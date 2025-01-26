@@ -66,7 +66,7 @@ class BookServiceTest {
 
         when(publisherRepository.findById(anyLong())).thenReturn(Optional.of(publisher));
         when(bookRepository.save(any(Book.class))).thenReturn(book);
-        BookResponse response = bookService.create(booksRequest);
+        BookSummaryResponse response = bookService.create(booksRequest);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(book.getTitle(), response.getTitle());
     }
