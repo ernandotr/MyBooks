@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -41,15 +42,18 @@ public class BookService {
         this.bookSubjectRepository = bookSubjectRepository;
     }
 
-    public BookResponse create(BooksRequest booksRequest) {
+    @Transactional
+    public BookSummaryResponse create(BooksRequest booksRequest) {
         Book book = toEntity(booksRequest);
         book.setAuthors(new HashSet<>(authorRepository.findAllById(booksRequest.getAuthors())));
         book.setPublisher(getPublisher(booksRequest));
+        book.setSubject(getSubject(booksRequest));
         book = bookRepository.save(book);
 
-        return toResponse(book);
+        return toSummaryResponse(book);
     }
 
+    @Transactional
     public void update(BooksRequest booksRequest, Long id) {
         if(booksRequest.getAuthors() == null || booksRequest.getAuthors().isEmpty()) {
             throw new RuntimeException("Authors cannot be empty");
@@ -75,12 +79,14 @@ public class BookService {
                 .orElseThrow(PublisherNotFoundException::new);
     }
 
+    @Transactional(readOnly = true)
     public Page<BookSummaryResponse> getAll(Pageable pageable) {
         Page<Book> booksPage = bookRepository.findAll(pageable);
         var books = booksPage.getContent().stream().map(this::toSummaryResponse).toList();
         return new PageImpl<>(books, pageable, booksPage.getTotalElements());
     }
 
+    @Transactional(readOnly = true)
     public BookResponse getBookById(Long id) {
         return toResponse(getById(id));
     }
@@ -89,6 +95,7 @@ public class BookService {
         return bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
     }
 
+    @Transactional
     public void delete(Long id) {
         bookRepository.deleteById(id);
     }
