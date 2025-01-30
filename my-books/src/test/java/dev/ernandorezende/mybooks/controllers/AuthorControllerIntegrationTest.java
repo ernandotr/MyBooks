@@ -58,7 +58,7 @@ public class AuthorControllerIntegrationTest {
     @Test
     void createNewAuthorSuccess() throws Exception {
         AuthorRequest request = new AuthorRequest("Simon Sinek");
-        AuthorResponse response = new AuthorResponse();
+        AuthorSummaryResponse response = new AuthorSummaryResponse();
         response.setName("Simon Sinek");
         response.setId(1L);
 
