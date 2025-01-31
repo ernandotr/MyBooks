@@ -6,6 +6,9 @@ import dev.ernandorezende.mybooks.entities.Publisher;
 import dev.ernandorezende.mybooks.exceptions.PublisherNotFoundException;
 import dev.ernandorezende.mybooks.repositories.PublisherRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,10 +41,12 @@ public class PublisherService {
         publisherRepository.save(publisher);
     }
 
-    public List<PublisherResponse> getAll() {
-        return publisherRepository.findAll().stream()
+    public Page<PublisherResponse> getAll(Pageable pageable) {
+        Page<Publisher> publishers = publisherRepository.findAll(pageable);
+        List<PublisherResponse> content = publishers.getContent().stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
+        return new PageImpl<>(content, pageable, publishers.getTotalElements());
     }
 
     public void delete(Long id) {

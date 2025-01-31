@@ -2,9 +2,9 @@ package dev.ernandorezende.mybooks.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.ernandorezende.mybooks.dtos.requests.AuthorRequest;
-import dev.ernandorezende.mybooks.dtos.responses.AuthorResponse;
-import dev.ernandorezende.mybooks.dtos.responses.AuthorSummaryResponse;
-import dev.ernandorezende.mybooks.services.AuthorService;
+import dev.ernandorezende.mybooks.dtos.requests.PublisherRequest;
+import dev.ernandorezende.mybooks.dtos.responses.PublisherResponse;
+import dev.ernandorezende.mybooks.services.PublisherService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,27 +28,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(AuthorController.class)
+@WebMvcTest(PublisherController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class AuthorControllerIntegrationTest {
+public class PublisherControllerIntegrationTest {
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private AuthorService authorService;
+    private PublisherService publisherService;
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    void givenAuthor_whenGetAuthors_thenReturnAuthor() throws Exception {
-        AuthorSummaryResponse author = new AuthorSummaryResponse();
-        author.setName("Test");
-        Page<AuthorSummaryResponse> allAuthors = new PageImpl<>(List.of(author));
+    void givenPublisher_whenGetAuthors_thenReturnPublisher() throws Exception {
+        PublisherResponse publisherResponse = new PublisherResponse();
+        publisherResponse.setName("Test");
+        Page<PublisherResponse> allPublishers = new PageImpl<>(List.of(publisherResponse));
 
-        given(this.authorService.getAll(any(Pageable.class))).willReturn(allAuthors);
+        given(this.publisherService.getAll(any(Pageable.class))).willReturn(allPublishers);
 
-        mvc.perform(get("/api/authors")
+        mvc.perform(get("/api/publishers")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
                // .andExpect(jsonPath("$", hasSize(1)));
@@ -57,13 +57,13 @@ public class AuthorControllerIntegrationTest {
 
     @Test
     void createNewAuthorSuccess() throws Exception {
-        AuthorRequest request = new AuthorRequest("Simon Sinek");
-        AuthorSummaryResponse response = new AuthorSummaryResponse();
+        PublisherRequest request = new PublisherRequest("Simon Sinek");
+        PublisherResponse response = new PublisherResponse();
         response.setName("Simon Sinek");
         response.setId(1L);
 
-        given(authorService.save(any(AuthorRequest.class))).willReturn(response);
-        mvc.perform(post("/api/authors").content(mapper.writeValueAsString(request))
+        given(publisherService.create(any(PublisherRequest.class))).willReturn(response);
+        mvc.perform(post("/api/publishers").content(mapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
@@ -74,7 +74,7 @@ public class AuthorControllerIntegrationTest {
     void editAuthorSuccess() throws Exception {
         AuthorRequest request = new AuthorRequest("Simon Sinek");
 
-        mvc.perform(put("/api/authors/{id}", 1)
+        mvc.perform(put("/api/publishers/{id}", 1)
                         .content(mapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -82,17 +82,17 @@ public class AuthorControllerIntegrationTest {
 
     @Test
     void deleteAuthorSuccess() throws Exception {
-        mvc.perform(delete("/api/authors/{id}", 1))
+        mvc.perform(delete("/api/publishers/{id}", 1))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     void getByIdSuccess() throws Exception {
-        AuthorResponse response = new AuthorResponse();
+        PublisherResponse response = new PublisherResponse();
         response.setName("Simon Sinek");
         response.setId(1L);
-        given(authorService.getById(anyLong())).willReturn(response);
-        mvc.perform(get("/api/authors/{id}", 1))
+        given(publisherService.getById(anyLong())).willReturn(response);
+        mvc.perform(get("/api/publishers/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists());
 

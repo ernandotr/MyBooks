@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,8 +42,8 @@ public class PublisherController {
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @GetMapping(produces = {"application/json", "application/xml"})
-    public ResponseEntity<List<PublisherResponse>> getAllPublishers() {
-        return ResponseEntity.ok(this.publisherService.getAll());
+    public ResponseEntity<Page<PublisherResponse>> getAllPublishers(Pageable pageable) {
+        return ResponseEntity.ok(this.publisherService.getAll(pageable));
     }
 
     @Operation(
