@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BooksRequest {
+public class BookRequest {
     @NotBlank(message = "The 'title' field is mandatory.")
     private String title;
 
