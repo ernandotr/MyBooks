@@ -1,6 +1,6 @@
 package dev.ernandorezende.mybooks.controllers;
 
-import dev.ernandorezende.mybooks.dtos.requests.BooksRequest;
+import dev.ernandorezende.mybooks.dtos.requests.BookRequest;
 import dev.ernandorezende.mybooks.dtos.responses.BookResponse;
 import dev.ernandorezende.mybooks.dtos.responses.BookSummaryResponse;
 import dev.ernandorezende.mybooks.exceptions.handlers.ErrorDetails;
@@ -37,8 +37,8 @@ public class BookController {
                     content = { @Content(schema = @Schema(implementation = ErrorDetails.class))})
     })
     @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
-    public ResponseEntity<BookSummaryResponse> createBook(@Valid @RequestBody BooksRequest booksRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(booksRequest));
+    public ResponseEntity<BookSummaryResponse> createBook(@Valid @RequestBody BookRequest bookRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(bookRequest));
     }
 
     @Operation(summary = "Get all books", description = "Retrieve a collection of books allowing pagination and sort.")
@@ -80,8 +80,8 @@ public class BookController {
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @PutMapping(value = "/{id}", consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
-    public ResponseEntity<Void> updateBook(@PathVariable("id") Long id, @Valid @RequestBody BooksRequest booksRequest) {
-        bookService.update(booksRequest, id);
+    public ResponseEntity<Void> updateBook(@PathVariable("id") Long id, @Valid @RequestBody BookRequest bookRequest) {
+        bookService.update(bookRequest, id);
         return ResponseEntity.noContent().build();
     }
 

@@ -1,6 +1,6 @@
 package dev.ernandorezende.mybooks.services;
 
-import dev.ernandorezende.mybooks.dtos.requests.BooksRequest;
+import dev.ernandorezende.mybooks.dtos.requests.BookRequest;
 import dev.ernandorezende.mybooks.dtos.responses.BookResponse;
 import dev.ernandorezende.mybooks.dtos.responses.BookSummaryResponse;
 import dev.ernandorezende.mybooks.entities.Author;
@@ -43,39 +43,39 @@ public class BookService {
     }
 
     @Transactional
-    public BookSummaryResponse create(BooksRequest booksRequest) {
-        Book book = toEntity(booksRequest);
-        book.setAuthors(new HashSet<>(authorRepository.findAllById(booksRequest.getAuthors())));
-        book.setPublisher(getPublisher(booksRequest));
-        book.setSubject(getSubject(booksRequest));
+    public BookSummaryResponse create(BookRequest bookRequest) {
+        Book book = toEntity(bookRequest);
+        book.setAuthors(new HashSet<>(authorRepository.findAllById(bookRequest.getAuthors())));
+        book.setPublisher(getPublisher(bookRequest));
+        book.setSubject(getSubject(bookRequest));
         book = bookRepository.save(book);
 
         return toSummaryResponse(book);
     }
 
     @Transactional
-    public void update(BooksRequest booksRequest, Long id) {
-        if(booksRequest.getAuthors() == null || booksRequest.getAuthors().isEmpty()) {
+    public void update(BookRequest bookRequest, Long id) {
+        if(bookRequest.getAuthors() == null || bookRequest.getAuthors().isEmpty()) {
             throw new RuntimeException("Authors cannot be empty");
         }
         Book book = getById(id);
-        book.setAuthors(new HashSet<>(authorRepository.findAllById(booksRequest.getAuthors())));
-        book.setPublisher(getPublisher(booksRequest));
-        book.setTitle(booksRequest.getTitle());
-        book.setSubject(getSubject(booksRequest));
-        book.setLanguage(booksRequest.getLanguage());
-        book.setPages(booksRequest.getPages());
-        book.setUrl(booksRequest.getUrl());
+        book.setAuthors(new HashSet<>(authorRepository.findAllById(bookRequest.getAuthors())));
+        book.setPublisher(getPublisher(bookRequest));
+        book.setTitle(bookRequest.getTitle());
+        book.setSubject(getSubject(bookRequest));
+        book.setLanguage(bookRequest.getLanguage());
+        book.setPages(bookRequest.getPages());
+        book.setUrl(bookRequest.getUrl());
         bookRepository.save(book);
     }
 
-    private BookSubject getSubject(BooksRequest booksRequest) {
-        return bookSubjectRepository.findById(booksRequest.getSubject())
+    private BookSubject getSubject(BookRequest bookRequest) {
+        return bookSubjectRepository.findById(bookRequest.getSubject())
                 .orElseThrow(BookSubjectNotFoundException::new);
     }
 
-    private Publisher getPublisher(BooksRequest booksRequest) {
-        return publisherRepository.findById(booksRequest.getPublisher())
+    private Publisher getPublisher(BookRequest bookRequest) {
+        return publisherRepository.findById(bookRequest.getPublisher())
                 .orElseThrow(PublisherNotFoundException::new);
     }
 
@@ -100,8 +100,8 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    private Book toEntity(BooksRequest booksRequest) {
-        return modelMapper.map(booksRequest, Book.class);
+    private Book toEntity(BookRequest bookRequest) {
+        return modelMapper.map(bookRequest, Book.class);
     }
 
     private BookSummaryResponse toSummaryResponse(Book book) {
